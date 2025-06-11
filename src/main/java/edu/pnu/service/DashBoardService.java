@@ -1,6 +1,7 @@
 package edu.pnu.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +43,27 @@ public class DashBoardService {
 					.build());
 		}
 	
-	public List<DashBoard> getDashBoards(){
+	public List<DashBoardDto> getDashBoards(){
 		
 		List<DashBoard> dashboards = dashBoardRepository.getByIdAll();
+		
+		List<DashBoardDto> dtos = new ArrayList<>();
+		
+		
+		for(DashBoard dashBoard:dashboards) {
+			dtos.add(DashBoardDto.builder()
+						.content(dashBoard.getContent())
+						.title(dashBoard.getTitle())
+						.username(dashBoard.getUsername().getUsername())
+						.nickname(dashBoard.getNickname())
+						.createdAt(dashBoard.getCreated_at())
+						.build());
+						
+		}
+		
 		//List<DashBoard> dashboards = dashBoardRepository.findAll();
 		
-		return dashboards;
+		return dtos;
 	}
 	
 	public DashBoard getDashBoard(Long id){
