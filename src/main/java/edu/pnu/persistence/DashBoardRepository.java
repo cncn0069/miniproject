@@ -1,0 +1,13 @@
+package edu.pnu.persistence;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import edu.pnu.domain.DashBoard;
+
+public interface DashBoardRepository extends JpaRepository<DashBoard, Long>{
+	@Query("SELECT d FROM DashBoard d order by created_at desc")
+	List<DashBoard> getDashBoardAll();
+}
