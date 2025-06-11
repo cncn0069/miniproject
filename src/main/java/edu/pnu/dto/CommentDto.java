@@ -21,4 +21,8 @@ public class CommentDto {
 	private String content;
 	private Long parentId;
 	private Long dashId;
+	private int depth;
+	private Long comment_id;
+	private Boolean enable;
+	private LocalDateTime created_at;
 }

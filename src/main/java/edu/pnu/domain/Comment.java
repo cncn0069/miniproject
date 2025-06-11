@@ -28,9 +28,11 @@ public class Comment {
 	private Long comment_id;
 	@ManyToOne
 	@JoinColumn(name = "dash_id")
-	private DashBoard dashBoard;
+	private DashBoard dash_id;
 	private Boolean enable;
-	private String username;
+	@ManyToOne
+	@JoinColumn(name = "username")
+	private Member username;
 	private String nickname;
 	private String content;
 	private Long parent_id;
