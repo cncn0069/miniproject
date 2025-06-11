@@ -25,7 +25,6 @@ public class DashBoardService {
 	public void uploadDashBoard(DashBoardDto dto) {
 		System.out.println(dto.getUsername());
 		
-		DashBoard dash = new DashBoard();
 		Member member = memberRepository.findById(dto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
 
@@ -34,7 +33,7 @@ public class DashBoardService {
             throw new IllegalArgumentException("닉네임 불일치");
         }
 		
-			dashBoardRepository.save(dash.builder()
+			dashBoardRepository.save(DashBoard.builder()
 					.username(member)
 					.nickname(member.getNickname())
 					.title(dto.getTitle())
@@ -66,10 +65,19 @@ public class DashBoardService {
 		return dtos;
 	}
 	
-	public DashBoard getDashBoard(Long id){
+	public DashBoardDto getDashBoard(Long id){
 		
 		DashBoard dashboards = dashBoardRepository.findById(id).get();
 		
-		return dashboards;
+		 
+		
+		return DashBoardDto.builder()
+				.dash_id(dashboards.getDash_id())
+				.title(dashboards.getTitle())
+				.content(dashboards.getContent())
+				.username(dashboards.getUsername().getUsername())
+				.nickname(dashboards.getNickname())
+				.createdAt(dashboards.getCreated_at())
+				.build();
 	}
 }
