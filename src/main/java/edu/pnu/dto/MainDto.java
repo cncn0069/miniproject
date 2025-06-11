@@ -19,7 +19,7 @@ public class MainDto {
 	private CommentDto comment;
 	private List<Comment> comments;
 	private DashBoardDto dashboard;
-	private List<DashBoard> dashboards;
+	private List<DashBoardDto> dashboards;
 	private DashBoard dsboard;
 	
 }
