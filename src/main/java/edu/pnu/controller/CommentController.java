@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.pnu.decoration.ObjectDeco;
 import edu.pnu.domain.Comment;
 import edu.pnu.dto.CommentDto;
 import edu.pnu.dto.DashBoardDto;
+import edu.pnu.dto.MainDto;
+import edu.pnu.dto.ObjectDto;
 import edu.pnu.service.CommentService;
 
 @RestController
@@ -19,14 +22,18 @@ public class CommentController {
 	CommentService commentService;
 	
 	@PostMapping("/api/comment/write")
-	public void writeComment(@RequestBody CommentDto dto) {
+	public void writeComment(@RequestBody ObjectDto dto) {
 		
-		commentService.writeComment(dto);
+		commentService.writeComment(dto.getContent().getComment());
 	}
 	
 	@PostMapping("/api/comment/read")
-	public List<Comment> readComment(@RequestBody DashBoardDto dto) {
+	public ObjectDto readComment(@RequestBody ObjectDto dto) {
 		System.out.println("comment");
-		return commentService.readComment(dto);
+		MainDto data = MainDto.builder().
+				comments(commentService.readComment(dto.getContent().getDashboard()))
+				.build();
+		
+		return new ObjectDeco(data).getObjectDtoDeco();
 	}
 }

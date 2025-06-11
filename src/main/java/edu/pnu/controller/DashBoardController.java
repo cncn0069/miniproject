@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.pnu.decoration.ObjectDeco;
 import edu.pnu.domain.DashBoard;
 import edu.pnu.dto.DashBoardDto;
+import edu.pnu.dto.MainDto;
+import edu.pnu.dto.ObjectDto;
 import edu.pnu.service.DashBoardService;
 
 @RestController
@@ -20,19 +23,27 @@ public class DashBoardController {
 	DashBoardService dashBoardService;
 	
 	@PostMapping("api/posts")
-	public void uploadDashBoard(@RequestBody DashBoardDto dto) {
-		dashBoardService.uploadDashBoard(dto);
+	public void uploadDashBoard(@RequestBody ObjectDto dto) {
+		dashBoardService.uploadDashBoard(dto.getContent().getDashboard());
 	}
 	
 	@GetMapping("api/posts")
-	public List<DashBoard> getDashBoards(){
+	public ObjectDto getDashBoards(){
 		
-		return dashBoardService.getDashBoards();
+		MainDto data = MainDto.builder()
+				.dashboards(dashBoardService.getDashBoards())
+				.build();
+		
+		return new ObjectDeco(data).getObjectDtoDeco();
 	}
 	
 	@GetMapping("/api/posts/{id}")
-	public DashBoard getDashBoard(@PathVariable Long id){
+	public ObjectDto getDashBoard(@PathVariable Long id){
 		
-		return dashBoardService.getDashBoard(id);
+		MainDto data = MainDto.builder()
+				.dsboard(dashBoardService.getDashBoard(id))
+				.build();
+		
+		return new ObjectDeco(data).getObjectDtoDeco();
 	}
 }

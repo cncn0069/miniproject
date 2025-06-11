@@ -44,7 +44,7 @@ public class DashBoardService {
 	
 	public List<DashBoard> getDashBoards(){
 		
-		List<DashBoard> dashboards = dashBoardRepository.findAll();
+		List<DashBoard> dashboards = dashBoardRepository.getByIdAll();
 		//List<DashBoard> dashboards = dashBoardRepository.findAll();
 		
 		return dashboards;

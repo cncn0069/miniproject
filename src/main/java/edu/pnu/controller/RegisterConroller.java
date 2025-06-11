@@ -2,6 +2,8 @@ package edu.pnu.controller;
 
 
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -48,6 +50,7 @@ public class RegisterConroller {
 					.nickname(membersEntity.getNickname())
 					.role(membersEntity.getRole())
 					.enabled(membersEntity.isEnabled())
+					.created_at(LocalDateTime.now())
 					.build();
 			
 			mrp.save(m);
