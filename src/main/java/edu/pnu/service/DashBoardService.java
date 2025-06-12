@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import edu.pnu.domain.DashBoard;
@@ -38,16 +39,13 @@ public class DashBoardService {
 					.created_at(LocalDateTime.now())
 					.build());
 		}
-	public void insertDashBoard(DashBoardDto dto) {
-		
-			DashBoard dashboard = dashBoardRepository.findById(dto.getDash_id()).get();
-		
-			if(dashboard != null)
+	public void insertDashBoard(DashBoardDto dto) throws AccessDeniedException{		
+			if(dto.getDash_id() != null)
 			{
-				log.info("이미 존재하는 게시판입니다.!");
-				return;
+				log.info("잘못된 요청입니다.");
+				throw new AccessDeniedException("잘못된 접근입니다.");
 			}
-				
+
 			
 			Member member = memberRepository.findById(dto.getUsername()).orElseThrow(() -> new IllegalArgumentException("Invalid username"));
 

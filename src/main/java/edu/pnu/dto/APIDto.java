@@ -1,34 +1,29 @@
-package edu.pnu.domain;
+package edu.pnu.dto;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity
+@Data
 @Getter
 @Setter
-@ToString
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class APILog {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class APIDto {
 	private Long id;
-	
 	private String log_type;
 	private String username;
 	private String api_endpoint;
 	private String http_method;
 	private String message;
-	private String ip_address;
+	private String id_address;
 	private LocalDateTime created_at;
 }
