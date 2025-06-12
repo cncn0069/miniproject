@@ -68,40 +68,40 @@ public class CommentService {
 		
 	}
 	
-	public List<CommentDto> readComment(DashBoardDto dto){
+	public List<CommentDto> readComment(Long dash_id){
 
 		List<CommentDto> results = new ArrayList<>();
-//		//같은 게시글이면서
-//		//제일 최상단의 댓글들
-//		 List<Comment> comments = commentRepo.getCommentByParentIdIsNullAndDashId(dto.getDash_id());
-//		 Deque<Comment> dfsCom = new ArrayDeque<>();
-//		 
-//		 for(Comment comment:comments) {
-//			 dfsCom.offer(comment);
-//		 }
-//		 //최상단의 댓글들을 돌면서
-//		while(!dfsCom.isEmpty()) {
-//			Comment comment = dfsCom.poll();
-//			results.add(CommentDto.builder()
-//					.content(comment.getContent())
-//					.parentId(comment.getParent_id())
-//					.username(comment.getUsername().getUsername())
-//					.nickname(comment.getNickname())
-//					.created_at(comment.getCreated_at())
-//					.dashId(comment.getDash_id().getDash_id())
-//					.comment_id(comment.getComment_id())
-//					.depth(comment.getDepth())
-//					.enable(comment.getEnable())
-//					.build());
-//			System.out.println(comment.getContent());
-//			//상단 comment와 같은 comment들 즉 하위 comment 찾기
-//			List<Comment> subcomments = commentRepo.getCommentDashIdAndParentIdOrderByCreatedAtDesc(dto.getDash_id(),comment.getComment_id());
-//			for(Comment subcomment :subcomments) {
-//				subcomment.setDepth(comment.getDepth() + 1);
-//				dfsCom.addFirst(subcomment);
-//			}
-//			
-//		}		
+		//같은 게시글이면서
+		//제일 최상단의 댓글들
+		 List<Comment> comments = commentRepo.getCommentByParentIdIsNullAndDashId(dash_id);
+		 Deque<Comment> dfsCom = new ArrayDeque<>();
+		 
+		 for(Comment comment:comments) {
+			 dfsCom.offer(comment);
+		 }
+		 //최상단의 댓글들을 돌면서
+		while(!dfsCom.isEmpty()) {
+			Comment comment = dfsCom.poll();
+			results.add(CommentDto.builder()
+					.content(comment.getContent())
+					.parentId(comment.getParent_id())
+					.username(comment.getUsername().getUsername())
+					.nickname(comment.getNickname())
+					.created_at(comment.getCreated_at())
+					.dashId(comment.getDash_id().getDash_id())
+					.comment_id(comment.getComment_id())
+					.depth(comment.getDepth())
+					.enable(comment.getEnable())
+					.build());
+			System.out.println(comment.getContent());
+			//상단 comment와 같은 comment들 즉 하위 comment 찾기
+			List<Comment> subcomments = commentRepo.getCommentDashIdAndParentIdOrderByCreatedAtDesc(dash_id,comment.getComment_id());
+			for(Comment subcomment :subcomments) {
+				subcomment.setDepth(comment.getDepth() + 1);
+				dfsCom.addFirst(subcomment);
+			}
+			
+		}		
 		
 		return results;
 	}
