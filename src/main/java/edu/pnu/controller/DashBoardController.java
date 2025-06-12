@@ -18,12 +18,12 @@ public class DashBoardController {
 	@Autowired
 	DashBoardService dashBoardService;
 	
-	@PostMapping("api/posts/upload")
+	@PostMapping("api/post/upload")
 	public void uploadDashBoard(@RequestBody ObjectDto dto) {
 		dashBoardService.uploadDashBoard(dto.getContent().getDashboard());
 	}
 	
-	@PostMapping("api/posts/insert")
+	@PostMapping("api/post/insert")
 	public void insertDashBoard(@RequestBody ObjectDto dto) {
 		dashBoardService.insertDashBoard(dto.getContent().getDashboard());
 	}
@@ -38,7 +38,7 @@ public class DashBoardController {
 		return new ObjectDeco(data).getObjectDtoDeco();
 	}
 	
-	@GetMapping("/api/posts/{id}")
+	@GetMapping("/api/post/{id}")
 	public ObjectDto getDashBoard(@PathVariable Long id){
 		
 		MainDto data = MainDto.builder()
