@@ -42,6 +42,21 @@ public class DashBoardService {
 					.build());
 		}
 	
+	public void insertDashBoard(DashBoardDto dto) {
+		System.out.println(dto.getUsername());
+		
+		Member member = memberRepository.findById(dto.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
+
+			dashBoardRepository.save(DashBoard.builder()
+					.username(member)
+					.nickname(member.getNickname())
+					.title(dto.getTitle())
+					.content(dto.getContent())
+					.created_at(LocalDateTime.now())
+					.build());
+		}
+	
 	public List<DashBoardDto> getDashBoards(){
 		
 		List<DashBoard> dashboards = dashBoardRepository.getByIdAll();
