@@ -12,7 +12,9 @@ import edu.pnu.domain.Member;
 import edu.pnu.dto.DashBoardDto;
 import edu.pnu.persistence.DashBoardRepository;
 import edu.pnu.persistence.MemberRepository;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class DashBoardService {
 	
@@ -23,12 +25,12 @@ public class DashBoardService {
 	MemberRepository memberRepository;
 	
 	public void uploadDashBoard(DashBoardDto dto) {
-		System.out.println(dto.getUsername());
-		
+	
 		Member member = memberRepository.findById(dto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
 
 			dashBoardRepository.save(DashBoard.builder()
+					.dash_id(dto.getDash_id())
 					.username(member)
 					.nickname(member.getNickname())
 					.title(dto.getTitle())
@@ -37,7 +39,26 @@ public class DashBoardService {
 					.build());
 		}
 	public void insertDashBoard(DashBoardDto dto) {
-			uploadDashBoard(dto);
+		
+			DashBoard dashboard = dashBoardRepository.findById(dto.getDash_id()).get();
+		
+			if(dashboard != null)
+			{
+				log.info("이미 존재하는 게시판입니다.!");
+				return;
+			}
+				
+			
+			Member member = memberRepository.findById(dto.getUsername()).orElseThrow(() -> new IllegalArgumentException("Invalid username"));
+
+			dashBoardRepository.save(DashBoard.builder()
+					.username(member)
+					.nickname(member.getNickname())
+					.title(dto.getTitle())
+					.content(dto.getContent())
+					.created_at(LocalDateTime.now())
+					.build());
+			
 		}
 
 	

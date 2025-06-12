@@ -34,13 +34,6 @@ public class RegisterConroller {
 	@PostMapping("/registeration")
 	public ResponseEntity<?> registerUser(@RequestBody Member membersEntity) {
 		System.out.println("post 회원가입 요청 결과 : " );
-		
-		System.out.println(membersEntity.getUsername());
-		System.out.println(membersEntity.getPassword());
-		System.out.println(membersEntity.getNickname());
-		System.out.println(membersEntity.getRole());
-		System.out.println(membersEntity.isEnabled());
-		
 		if (mrp.existsById(membersEntity.getUsername())) {
 			return ResponseEntity.ok("이미 존재하는 아이디 입니다.");
 		}else {
