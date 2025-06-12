@@ -28,11 +28,6 @@ public class DashBoardService {
 		Member member = memberRepository.findById(dto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
 
-        // 닉네임 검증 (옵션)
-        if (!member.getNickname().equals(dto.getNickname())) {
-            throw new IllegalArgumentException("닉네임 불일치");
-        }
-		
 			dashBoardRepository.save(DashBoard.builder()
 					.username(member)
 					.nickname(member.getNickname())
@@ -41,21 +36,10 @@ public class DashBoardService {
 					.created_at(LocalDateTime.now())
 					.build());
 		}
-	
 	public void insertDashBoard(DashBoardDto dto) {
-		System.out.println(dto.getUsername());
-		
-		Member member = memberRepository.findById(dto.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
-
-			dashBoardRepository.save(DashBoard.builder()
-					.username(member)
-					.nickname(member.getNickname())
-					.title(dto.getTitle())
-					.content(dto.getContent())
-					.created_at(LocalDateTime.now())
-					.build());
+			uploadDashBoard(dto);
 		}
+
 	
 	public List<DashBoardDto> getDashBoards(){
 		

@@ -18,9 +18,14 @@ public class DashBoardController {
 	@Autowired
 	DashBoardService dashBoardService;
 	
-	@PostMapping("api/posts")
+	@PostMapping("api/posts/upload")
 	public void uploadDashBoard(@RequestBody ObjectDto dto) {
 		dashBoardService.uploadDashBoard(dto.getContent().getDashboard());
+	}
+	
+	@PostMapping("api/posts/insert")
+	public void insertDashBoard(@RequestBody ObjectDto dto) {
+		dashBoardService.insertDashBoard(dto.getContent().getDashboard());
 	}
 	
 	@GetMapping("api/posts")
