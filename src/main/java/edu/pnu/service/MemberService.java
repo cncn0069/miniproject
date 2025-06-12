@@ -31,6 +31,7 @@ public class MemberService {
 				.nickname(member.getNickname())
 				.username(member.getUsername())
 				.created_at(member.getCreated_at())
+				.enabled(member.isEnabled())
 				.build();
 		
 		return dto;

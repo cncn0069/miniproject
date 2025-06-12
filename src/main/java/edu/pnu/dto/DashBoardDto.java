@@ -24,4 +24,5 @@ public class DashBoardDto {
     private String username; // Member의 username (문자열)
     private String nickname; // Member의 nickname (문자열)
     private LocalDateTime createdAt;
+    private boolean enabled;
 }

@@ -20,9 +20,9 @@ public class MemberController {
 	@Autowired
 	MemberService memberService;
 	
-	@GetMapping("/memberinfo")
-	public ObjectDto memberInfo() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	@GetMapping("/loged-in/user")
+	public ObjectDto memberInfo(Authentication authentication) {
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User)authentication.getPrincipal(); 
 		
 		return new ObjectDeco(
@@ -33,6 +33,7 @@ public class MemberController {
 				.build())
 				.getObjectDtoDeco();
 	}
+	
 }
 //@AuthenticationPrincipal Authentication principal
 //왜 안됐는지 질문
