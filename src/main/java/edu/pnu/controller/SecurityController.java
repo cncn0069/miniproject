@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import edu.pnu.decoration.ObjectDeco;
 import edu.pnu.domain.Member;
+import edu.pnu.dto.MainDto;
+import edu.pnu.dto.ObjectDto;
 import edu.pnu.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -82,30 +86,31 @@ public class SecurityController {
 	 * }
 	 */
 
-	@GetMapping("/loged-in/user")
-	public ResponseEntity<?> getUserInfo(Authentication auth){
-		
-		if (auth == null || !auth.isAuthenticated()) {
-			log.info("getUserInfo : 호출 auth가 null 혹은 인증이 안되어있음 Axios withcredential 확인 필요");
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 되어있지 않음");
-		}
-		Map<String, Object> userInfo = new HashMap<>();
-		 
-		if (auth.getPrincipal() instanceof User user ) {
-			userInfo.put("logintype", "DB등록유저");
-			Member member = memberService.getMembers(user.getUsername());
-			userInfo.put("username", member.getUsername());
-			userInfo.put("nickname", member.getNickname());
-			userInfo.put("role", member.getRole());
-			userInfo.put("isLogin", "logged-in");
-		}else if (auth.getPrincipal() instanceof OAuth2User oAuth2User) {
-			String email = oAuth2User.getAttribute("email");
-			userInfo.put("logintype", "Oauth2등록유저");
-		}
-		return ResponseEntity.ok(userInfo);
-	}
+//	@GetMapping("/loged-in/user")
+//	public ResponseEntity<?> getUserInfo(Authentication auth){
+//		
+//		if (auth == null || !auth.isAuthenticated()) {
+//			log.info("getUserInfo : 호출 auth가 null 혹은 인증이 안되어있음 Axios withcredential 확인 필요");
+//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 되어있지 않음");
+//		}
+//		Map<String, Object> userInfo = new HashMap<>();
+//		 
+//		if (auth.getPrincipal() instanceof User user ) {
+//			userInfo.put("logintype", "DB등록유저");
+//			Member member = memberService.getMembers(user.getUsername());
+//			userInfo.put("username", member.getUsername());
+//			userInfo.put("nickname", member.getNickname());
+//			userInfo.put("role", member.getRole());
+//			userInfo.put("isLogin", "logged-in");
+//		}else if (auth.getPrincipal() instanceof OAuth2User oAuth2User) {
+//			String email = oAuth2User.getAttribute("email");
+//			userInfo.put("logintype", "Oauth2등록유저");
+//		}
+//		
+//		return ResponseEntity.ok(userInfo);
+//	}
 	
-	
+
 	@GetMapping("/manager")
 	public String manager() {
 		return "manager";
