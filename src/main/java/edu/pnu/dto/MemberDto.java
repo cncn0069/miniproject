@@ -18,12 +18,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class MemberDto {
+public class MemberDto{
 	private String username;
 	private String password;
 	private String nickname;
 	private Role role;
 	private boolean enabled;
 	private LocalDateTime created_at;
-	private String jwtToken;
+	private String jwtToken;	
 }
