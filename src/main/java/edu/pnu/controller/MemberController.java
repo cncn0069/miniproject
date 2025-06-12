@@ -1,16 +1,16 @@
 package edu.pnu.controller;
 
-import java.security.Principal;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.pnu.decoration.ObjectDeco;
 import edu.pnu.dto.MainDto;
-import edu.pnu.dto.MemberDto;
 import edu.pnu.dto.ObjectDto;
 import edu.pnu.service.MemberService;
 
@@ -20,15 +20,19 @@ public class MemberController {
 	@Autowired
 	MemberService memberService;
 	
-	@PostMapping("/memberinfo")
-	public ObjectDto memberInfo(@AuthenticationPrincipal Principal principal) {
-
+	@GetMapping("/memberinfo")
+	public ObjectDto memberInfo() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User)authentication.getPrincipal(); 
+		
 		return new ObjectDeco(
 				MainDto.builder()
 				.member(
-						memberService.getMemberInfo(principal.getName())
+						memberService.getMemberInfo(user.getUsername())
 				)
 				.build())
 				.getObjectDtoDeco();
 	}
 }
+//@AuthenticationPrincipal Authentication principal
+//왜 안됐는지 질문

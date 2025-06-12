@@ -18,7 +18,7 @@ import lombok.ToString;
 @Entity@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class Member{
 	@Id
 	private String username;
 	@Column(nullable = false)

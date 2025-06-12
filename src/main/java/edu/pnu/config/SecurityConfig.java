@@ -57,9 +57,10 @@ public class SecurityConfig {
 		http.csrf(c->c.disable());
 		http.formLogin(f->f.disable());
 		http.httpBasic(b->b.disable());
-		http.sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-		http.addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()));
 		http.addFilterBefore(new JWTAuthorizationFilter(mrp),AuthorizationFilter.class);
+		http.addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()));
+		http.sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
 		
 //		http.oauth2Login(o->o
 //				.loginPage("http://localhost:3000")
