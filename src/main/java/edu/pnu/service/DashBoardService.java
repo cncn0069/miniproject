@@ -51,6 +51,7 @@ public class DashBoardService {
 		
 		for(DashBoard dashBoard:dashboards) {
 			dtos.add(DashBoardDto.builder()
+						.dash_id(dashBoard.getDash_id())
 						.content(dashBoard.getContent())
 						.title(dashBoard.getTitle())
 						.username(dashBoard.getUsername().getUsername())
