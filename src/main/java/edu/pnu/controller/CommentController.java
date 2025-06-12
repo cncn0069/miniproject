@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.pnu.decoration.ObjectDeco;
 import edu.pnu.dto.MainDto;
 import edu.pnu.dto.ObjectDto;
+import edu.pnu.persistence.APILogRepository;
 import edu.pnu.service.CommentService;
 
 @RestController
@@ -15,6 +16,9 @@ public class CommentController {
 
 	@Autowired
 	CommentService commentService;
+	
+	@Autowired
+	APILogRepository apiLogRepo;
 	
 	@PostMapping("/api/comment/write")
 	public void writeComment(@RequestBody ObjectDto dto) {

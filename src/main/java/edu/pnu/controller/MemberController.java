@@ -20,7 +20,7 @@ public class MemberController {
 	@Autowired
 	MemberService memberService;
 	
-	@GetMapping("/loged-in/user")
+	@GetMapping({"/loged-in/user","/memberinfo"})
 	public ObjectDto memberInfo(Authentication authentication) {
 //		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User)authentication.getPrincipal(); 
