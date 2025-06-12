@@ -2,27 +2,28 @@ package edu.pnu.dto;
 
 import java.time.LocalDateTime;
 
+import edu.pnu.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Data
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CommentDto {
+@ToString
+public class MemberDto {
 	private String username;
+	private String password;
 	private String nickname;
-	private String content;
-	private Long parent_id;
-	private Long dash_id;
-	private int depth;
-	private Long comment_id;
-	private Boolean enable;
+	private Role role;
+	private boolean enabled;
 	private LocalDateTime created_at;
+	private String jwtToken;
 }

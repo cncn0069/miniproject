@@ -19,4 +19,5 @@ public class MainDto {
 	private DashBoardDto dashboard;
 	private List<DashBoardDto> dashboards;
 	private DashBoardDto dsboard;
+	private MemberDto member;
 }

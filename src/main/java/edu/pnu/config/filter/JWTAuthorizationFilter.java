@@ -1,6 +1,7 @@
 package edu.pnu.config.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.util.Optional;
 
@@ -87,7 +88,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 		log.info("권한 인증 성공");
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		filterChain.doFilter(request, response);
-		log.info("권한인가 프로세스 종료 ");
 	}
 	
 }

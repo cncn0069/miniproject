@@ -50,6 +50,7 @@ public class SecurityConfig {
 				.requestMatchers("/member/**").authenticated()
 				.requestMatchers("/manager/**").hasAnyRole("MANAGER","ADMIN")
 				.requestMatchers("/admin/**").hasRole("ADMIN")
+				.requestMatchers("/loginCheck/**").authenticated()
 				.requestMatchers("/h2-console/**").permitAll()
 				.anyRequest().permitAll()
 				);

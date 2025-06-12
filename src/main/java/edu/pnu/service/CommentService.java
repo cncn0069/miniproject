@@ -14,7 +14,6 @@ import edu.pnu.domain.Comment;
 import edu.pnu.domain.DashBoard;
 import edu.pnu.domain.Member;
 import edu.pnu.dto.CommentDto;
-import edu.pnu.dto.DashBoardDto;
 import edu.pnu.persistence.CommentRepository;
 import edu.pnu.persistence.DashBoardRepository;
 import edu.pnu.persistence.MemberRepository;
@@ -33,12 +32,12 @@ public class CommentService {
 	
 	public void writeComment(CommentDto dto){
 		
-		DashBoard dashboard = dashBoardRepository.findById(dto.getDashId()).get();
+		DashBoard dashboard = dashBoardRepository.findById(dto.getDash_id()).get();
 		Member member;
 		try {
 			member = memberRepository.findById(dto.getUsername()).orElseThrow(()->new UserPrincipalNotFoundException("NoUserName"));
 			//그냥 새로 댓글을 만든다면
-			if(dto.getParentId() == null) {
+			if(dto.getParent_id() == null) {
 				commentRepo.save(Comment.builder()
 						.dash_id(dashboard)
 						.content(dto.getContent())
@@ -49,13 +48,16 @@ public class CommentService {
 						.build());
 			}else {
 			//대 댓글
+				Comment parent = commentRepo.findById(dto.getParent_id()).orElseThrow(()->new UserPrincipalNotFoundException("NoComment"));
+				
 				commentRepo.save(Comment.builder()
 						.dash_id(dashboard)
 						.content(dto.getContent())
 						.username(member)
 						.nickname(dto.getNickname())
 						.created_at(LocalDateTime.now())
-						.parent_id(dto.getParentId())
+						.parent_id(dto.getParent_id())
+						.depth(parent.getDepth()+1)
 						.enable(true)
 						.build());
 			}
@@ -68,12 +70,12 @@ public class CommentService {
 		
 	}
 	
-	public List<CommentDto> readComment(Long dash_id){
+	public List<CommentDto> readComment(CommentDto dto){
 
 		List<CommentDto> results = new ArrayList<>();
 		//같은 게시글이면서
 		//제일 최상단의 댓글들
-		 List<Comment> comments = commentRepo.getCommentByParentIdIsNullAndDashId(dash_id);
+		 List<Comment> comments = commentRepo.getCommentByParentIdIsNullAndDashId(dto.getDash_id());
 		 Deque<Comment> dfsCom = new ArrayDeque<>();
 		 
 		 for(Comment comment:comments) {
@@ -84,23 +86,22 @@ public class CommentService {
 			Comment comment = dfsCom.poll();
 			results.add(CommentDto.builder()
 					.content(comment.getContent())
-					.parentId(comment.getParent_id())
+					.parent_id(comment.getParent_id())
 					.username(comment.getUsername().getUsername())
 					.nickname(comment.getNickname())
 					.created_at(comment.getCreated_at())
-					.dashId(comment.getDash_id().getDash_id())
+					.dash_id(comment.getDash_id().getDash_id())
 					.comment_id(comment.getComment_id())
 					.depth(comment.getDepth())
 					.enable(comment.getEnable())
 					.build());
-			System.out.println(comment.getContent());
 			//상단 comment와 같은 comment들 즉 하위 comment 찾기
-			List<Comment> subcomments = commentRepo.getCommentDashIdAndParentIdOrderByCreatedAtDesc(dash_id,comment.getComment_id());
-			for(Comment subcomment :subcomments) {
-				subcomment.setDepth(comment.getDepth() + 1);
-				dfsCom.addFirst(subcomment);
-			}
+			List<Comment> subcomments = commentRepo.getCommentDashIdAndParentIdOrderByCreatedAtDesc(dto.getDash_id(),comment.getComment_id());
+			//추가
 			
+			for(Comment subcomment:subcomments) {
+				 dfsCom.offerFirst(subcomment);
+			 }
 		}		
 		
 		return results;
