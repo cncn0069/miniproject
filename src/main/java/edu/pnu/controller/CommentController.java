@@ -26,7 +26,7 @@ public class CommentController {
 	public ObjectDto readComment(@RequestBody ObjectDto dto) {
 		System.out.println("comment");
 		MainDto data = MainDto.builder().
-				comments(commentService.readComment(dto.getContent().getComment().getDashId()))
+				comments(commentService.readComment(dto.getContent().getComment()))
 				.build();
 		
 		return new ObjectDeco(data).getObjectDtoDeco();

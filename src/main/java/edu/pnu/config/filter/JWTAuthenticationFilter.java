@@ -3,6 +3,7 @@ package edu.pnu.config.filter;
 import java.io.IOException;
 import java.util.Date;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,16 +52,24 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 		User user = (User)authResult.getPrincipal();
-		String token = JWT.create()
-				.withExpiresAt(new Date(System.currentTimeMillis()+JWTUtil.ACCESS_TOKEN_MESC))
-				.withClaim("username", user.getUsername())
-				.sign(Algorithm.HMAC256("edu.pnu.jwt"));
-		Cookie cookie = new Cookie("jwtToken", token);
-		cookie.setHttpOnly(true);
-		cookie.setSecure(false); // HTTPS 환경에서만 쿠키 전송됨
-		cookie.setPath("/");
-		cookie.setMaxAge((int)JWTUtil.ACCESS_TOKEN_MESC);
-		response.addCookie(cookie);
+//		String token = JWT.create()
+//				.withExpiresAt(new Date(System.currentTimeMillis()+JWTUtil.ACCESS_TOKEN_MESC))
+//				.withClaim("username", user.getUsername())
+//				.sign(Algorithm.HMAC256("edu.pnu.jwt"));
+//		Cookie cookie = new Cookie("jwtToken", token);
+//		cookie.setHttpOnly(true);
+//		cookie.setSecure(false); // HTTPS 환경에서만 쿠키 전송됨
+//		cookie.setPath("/");
+//		cookie.setMaxAge((int)JWTUtil.ACCESS_TOKEN_MESC);
+//		response.addCookie(cookie);
+//		
+//		
+//		
+//		cookie = new Cookie("userinfo", user.getUsername());
+//		response.addCookie(cookie);
+		String token = JWTUtil.getJWT(user.getUsername());
+		
+		response.addHeader(HttpHeaders.AUTHORIZATION,token);
 		response.setStatus(HttpStatus.OK.value());
 		log.info("인증 프로세스 성공 ");
 	}

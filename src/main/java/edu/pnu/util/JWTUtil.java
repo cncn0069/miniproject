@@ -7,7 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 
 //JWT 토큰 생성 Oauth2
 public class JWTUtil {
-	public static final long ACCESS_TOKEN_MESC = 10*(6*1000); //1000ms * 6 
+	public static final long ACCESS_TOKEN_MESC = 10*(6*10000); //1000ms * 6 
 	public static final String JWT_KEY = "edu.pnu.jwt";
 	public static final String claimName = "username";
 	public static final String PREFIX = "Bearer ";
@@ -27,11 +27,12 @@ public class JWTUtil {
 	}
 	
 	public static String getClaim(String token) {
-		String tok = getJWT(token);
+		String tok = getJWTSource(token);
 		return JWT.require(Algorithm.HMAC256(JWT_KEY)).build().verify(tok).getClaim(claimName).asString();
 	}
 	public static boolean isExpired(String token) {
 		String tok = getJWTSource(token);
 		return JWT.require(Algorithm.HMAC256(JWT_KEY)).build().verify(tok).getExpiresAt().before(new Date());
 	}
+
 }

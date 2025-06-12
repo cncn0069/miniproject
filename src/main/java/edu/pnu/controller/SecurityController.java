@@ -106,10 +106,6 @@ public class SecurityController {
 	}
 	
 	
-	@GetMapping("/member")
-	public String member() {
-		return "member";
-	}
 	@GetMapping("/manager")
 	public String manager() {
 		return "manager";
