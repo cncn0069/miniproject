@@ -2,6 +2,7 @@ package edu.pnu.config;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -55,7 +56,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 				.username(username)
 				.password(encoder.encode(""))
 				.nickname(nick)
-				.role(Role.ROLE_MEMBER)
+				.role(Arrays.asList(Role.ROLE_MEMBER, Role.ROLE_ADMIN))
 				.enabled(true)
 				.build()
 				);

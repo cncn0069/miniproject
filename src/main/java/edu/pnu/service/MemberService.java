@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberService {
 	private final MemberRepository memberRepo;
-	
+
 	public List<Member> getAllMembers(){
 		return memberRepo.findAll();
 	}

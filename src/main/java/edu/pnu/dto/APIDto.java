@@ -26,4 +26,5 @@ public class APIDto {
 	private String message;
 	private String id_address;
 	private LocalDateTime created_at;
+	private Integer status;
 }

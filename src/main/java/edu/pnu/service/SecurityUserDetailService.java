@@ -17,9 +17,16 @@ public class SecurityUserDetailService implements UserDetailsService {
 	@Autowired
 	private MemberRepository mrp;
 
+	@Autowired
+	private LogService logservice;
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Member m = mrp.findById(username).orElseThrow(() -> new UsernameNotFoundException("에러 : "+ username + " 를 찾지 못하였습니다."));
+		
+		//로그인 로그
+		logservice.setloginLog(m.getUsername());
+		
 		return new User(m.getUsername(),m.getPassword(),AuthorityUtils.createAuthorityList(m.getRole().toString()));
 	}
 

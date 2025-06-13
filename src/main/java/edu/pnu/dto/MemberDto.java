@@ -1,6 +1,7 @@
 package edu.pnu.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import edu.pnu.domain.Role;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class MemberDto{
 	private String username;
 	private String password;
 	private String nickname;
-	private Role role;
+	private List<Role> role;
 	private boolean enabled;
 	private LocalDateTime created_at;
 	private String jwtToken;	

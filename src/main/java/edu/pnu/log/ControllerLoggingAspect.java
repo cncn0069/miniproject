@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.pnu.domain.APILog;
 import edu.pnu.persistence.APILogRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Aspect
@@ -37,9 +38,13 @@ public class ControllerLoggingAspect {
     // 인증 정보 포함한 로깅 처리
     @Around("controllerPointcut()")
     public Object logController(ProceedingJoinPoint joinPoint) throws Throwable {
-        HttpServletRequest request = ((ServletRequestAttributes) 
-            RequestContextHolder.getRequestAttributes()).getRequest();
+    	 ServletRequestAttributes sra = (ServletRequestAttributes) 
+    		        RequestContextHolder.getRequestAttributes();
+    	 
+        HttpServletRequest request = sra.getRequest();
         
+        HttpServletResponse response = sra.getResponse();
+        		
         // 요청 정보 추출
         String method = request.getMethod();
         String uri = request.getRequestURI();
@@ -55,6 +60,7 @@ public class ControllerLoggingAspect {
         		.username(username)
         		.api_endpoint(uri)
         		.http_method(method)
+        		.status(response.getStatus())
         		.created_at(LocalDateTime.now())
         		.build()
         		);
