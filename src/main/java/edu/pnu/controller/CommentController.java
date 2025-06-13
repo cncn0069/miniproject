@@ -3,6 +3,7 @@ package edu.pnu.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.pnu.decoration.ObjectDeco;
@@ -33,5 +34,10 @@ public class CommentController {
 				.build();
 		
 		return new ObjectDeco(data).getObjectDtoDeco();
+	}
+	
+	@PostMapping("/api/comment/delete")
+	public void deleteDashBoard(@RequestParam Long id) {
+		commentService.deleteComment(id);
 	}
 }

@@ -1,7 +1,6 @@
 package edu.pnu.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,10 +59,11 @@ public class DashBoardService {
 					.title(dto.getTitle())
 					.content(dto.getContent())
 					.createdAt(LocalDateTime.now())
+					.enabled(true)
 					.build());
 			
 		}	
-	public DashResponseDto getDashBoards(int pageNum,int pageSize,String method){
+	public DashResponseDto getDashBoards(int pageNum,int pageSize,String method,String q){
 		
 		Pageable pageable = null;		
 		
@@ -76,7 +76,7 @@ public class DashBoardService {
 		}
 		
 		
-		Page<DashBoard> page = dashBoardRepository.findAll(pageable);
+		Page<DashBoard> page = dashBoardRepository.getDashBoardAllEnabledNotFalse(pageable);
 		
 		
 		DashResponseDto dashResponseDto = DashResponseDto.builder()
@@ -103,13 +103,15 @@ public class DashBoardService {
 					
 		
 			return dashResponseDto;
-	}
-	
-	public DashBoardDto getDashBoard(Long id){
+		}
+	public DashBoardDto getDashBoard(Long id) throws IllegalAccessError{
 		
-		DashBoard dashboards = dashBoardRepository.findById(id).get();
+		DashBoard dashboards = dashBoardRepository.getByIdEnabledNotFalse(id);
 		
-		 
+		if(dashboards == null)
+		{
+			throw new IllegalAccessError("삭제된 게시글입니다");
+		}
 		
 		return DashBoardDto.builder()
 				.dash_id(dashboards.getDash_id())
@@ -119,6 +121,13 @@ public class DashBoardService {
 				.nickname(dashboards.getNickname())
 				.createdAt(dashboards.getCreatedAt())
 				.build();
+		}
+	
+	public void deleteDashBoard(Long dashId) {
+		
+		DashBoard dashBoard = dashBoardRepository.findById(dashId).orElseThrow(()->new IllegalAccessError("없는 게시글입니다."));
+		dashBoard.setEnabled(false);
+		dashBoardRepository.save(dashBoard);
 	}
 	
 }

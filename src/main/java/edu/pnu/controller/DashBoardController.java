@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.pnu.decoration.ObjectDeco;
-import edu.pnu.dto.DashResponseDto;
 import edu.pnu.dto.MainDto;
 import edu.pnu.dto.ObjectDto;
 import edu.pnu.service.DashBoardService;
@@ -35,16 +34,17 @@ public class DashBoardController {
 	public ResponseEntity<?> getDashBoards(
 			@RequestParam (name="page",defaultValue= "1")int pageNum
 			,@RequestParam (name="size",defaultValue= "10")	int pageSize
-			,@RequestParam (defaultValue = "latest")	String method){
+			,@RequestParam (defaultValue = "latest")String method
+			,@RequestParam String q){
 		
 		MainDto data = MainDto.builder()
-				.dashResponseDto(dashBoardService.getDashBoards(pageNum,pageSize,method))
+				.dashResponseDto(dashBoardService.getDashBoards(pageNum,pageSize,method,q))
 				.build();
 		
 		return ResponseEntity.ok(new ObjectDeco(data).getObjectDtoDeco());
 	}
 	
-	@GetMapping("/api/post/{id}")
+	@GetMapping("api/post/{id}")
 	public ResponseEntity<?> getDashBoard(@PathVariable Long id){
 		
 		MainDto data = MainDto.builder()
@@ -54,5 +54,8 @@ public class DashBoardController {
 		return ResponseEntity.ok(new ObjectDeco(data).getObjectDtoDeco());
 	}
 	
-
+	@PostMapping("api/post/delete")
+	public void deleteDashBoard(@RequestParam Long dashId) {
+		dashBoardService.deleteDashBoard(dashId);
+	}
 }

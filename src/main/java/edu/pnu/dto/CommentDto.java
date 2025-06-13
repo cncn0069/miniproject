@@ -23,6 +23,6 @@ public class CommentDto {
 	private Long dash_id;
 	private int depth;
 	private Long comment_id;
-	private Boolean enable;
+	private Boolean enabled;
 	private LocalDateTime created_at;
 }

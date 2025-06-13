@@ -29,7 +29,7 @@ public class Comment {
 	@ManyToOne
 	@JoinColumn(name = "dash_id")
 	private DashBoard dash_id;
-	private Boolean enable;
+	private Boolean enabled;
 	@ManyToOne
 	@JoinColumn(name = "username")
 	private Member username;
