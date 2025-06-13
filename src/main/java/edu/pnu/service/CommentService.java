@@ -1,6 +1,5 @@
 package edu.pnu.service;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class CommentService {
 						.username(member)
 						.nickname(dto.getNickname())
 						.created_at(LocalDateTime.now())
-						.enable(true)
+						.enabled(true)
 						.build());
 			}else {
 			//대 댓글
@@ -60,7 +59,7 @@ public class CommentService {
 						.created_at(LocalDateTime.now())
 						.parent_id(dto.getParent_id())
 						.depth(parent.getDepth()+1)
-						.enable(true)
+						.enabled(true)
 						.build());
 			}
 			
@@ -86,17 +85,25 @@ public class CommentService {
 		 //최상단의 댓글들을 돌면서
 		while(!dfsCom.isEmpty()) {
 			Comment comment = dfsCom.poll();
-			results.add(CommentDto.builder()
-					.content(comment.getContent())
-					.parent_id(comment.getParent_id())
-					.username(comment.getUsername().getUsername())
-					.nickname(comment.getNickname())
-					.created_at(comment.getCreated_at())
-					.dash_id(comment.getDash_id().getDash_id())
-					.comment_id(comment.getComment_id())
-					.depth(comment.getDepth())
-					.enable(comment.getEnable())
-					.build());
+			if(comment.getEnabled()) {
+				results.add(CommentDto.builder()
+						.content(comment.getContent())
+						.parent_id(comment.getParent_id())
+						.username(comment.getUsername().getUsername())
+						.nickname(comment.getNickname())
+						.created_at(comment.getCreated_at())
+						.dash_id(comment.getDash_id().getDash_id())
+						.comment_id(comment.getComment_id())
+						.depth(comment.getDepth())
+						.enabled(comment.getEnabled())
+						.build());
+			}else {
+				results.add(CommentDto.builder()
+						.content("삭제된 댓글입니다.")
+						.enabled(comment.getEnabled())
+						.build());
+			}
+			
 			//상단 comment와 같은 comment들 즉 하위 comment 찾기
 			List<Comment> subcomments = commentRepo.getCommentDashIdAndParentIdOrderByCreatedAtDesc(dto.getDash_id(),comment.getComment_id());
 			//추가
@@ -108,4 +115,14 @@ public class CommentService {
 		
 		return results;
 	}
+	public void deleteComment(Long dashId) {
+		
+		Comment comment = commentRepo.findById(dashId).orElseThrow(()->new IllegalAccessError("없는 게시글입니다."));
+		comment.setEnabled(false);
+		
+		
+		commentRepo.save(comment);
+	}
+	
+	
 }
