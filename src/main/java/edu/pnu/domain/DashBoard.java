@@ -2,6 +2,7 @@ package edu.pnu.domain;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,6 +36,7 @@ public class DashBoard {
 	private String title;
 	@Lob
 	private String content;
-	private LocalDateTime created_at; 
+	@Column(name = "created_at")
+	private LocalDateTime createdAt; 
 	private boolean enabled;
 }

@@ -1,16 +1,21 @@
 package edu.pnu.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import edu.pnu.domain.DashBoard;
 import edu.pnu.domain.Member;
 import edu.pnu.dto.DashBoardDto;
+import edu.pnu.dto.DashResponseDto;
 import edu.pnu.persistence.DashBoardRepository;
 import edu.pnu.persistence.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +41,7 @@ public class DashBoardService {
 					.nickname(member.getNickname())
 					.title(dto.getTitle())
 					.content(dto.getContent())
-					.created_at(LocalDateTime.now())
+					.createdAt(LocalDateTime.now())
 					.build());
 		}
 	public void insertDashBoard(DashBoardDto dto) throws AccessDeniedException{		
@@ -54,34 +59,50 @@ public class DashBoardService {
 					.nickname(member.getNickname())
 					.title(dto.getTitle())
 					.content(dto.getContent())
-					.created_at(LocalDateTime.now())
+					.createdAt(LocalDateTime.now())
 					.build());
 			
-		}
-
-	
-	public List<DashBoardDto> getDashBoards(){
+		}	
+	public DashResponseDto getDashBoards(int pageNum,int pageSize,String method){
 		
-		List<DashBoard> dashboards = dashBoardRepository.getByIdAll();
+		Pageable pageable = null;		
 		
-		List<DashBoardDto> dtos = new ArrayList<>();
-		
-		
-		for(DashBoard dashBoard:dashboards) {
-			dtos.add(DashBoardDto.builder()
-						.dash_id(dashBoard.getDash_id())
-						.content(dashBoard.getContent())
-						.title(dashBoard.getTitle())
-						.username(dashBoard.getUsername().getUsername())
-						.nickname(dashBoard.getNickname())
-						.createdAt(dashBoard.getCreated_at())
-						.build());
-						
+		 if(method.equals("latest")) {
+				pageable = PageRequest.of(pageNum-1, pageSize,
+							Sort.by("createdAt").descending());
+		}else if(method.equals("oldest")) {
+				pageable = PageRequest.of(pageNum-1, pageSize,
+						Sort.by("createdAt").ascending());
 		}
 		
-		//List<DashBoard> dashboards = dashBoardRepository.findAll();
 		
-		return dtos;
+		Page<DashBoard> page = dashBoardRepository.findAll(pageable);
+		
+		
+		DashResponseDto dashResponseDto = DashResponseDto.builder()
+					.dashboards(page.getContent().stream()
+					.map(dashBoard -> DashBoardDto.builder()
+							.dash_id(dashBoard.getDash_id())
+							.title(dashBoard.getTitle())
+							.content(dashBoard.getContent())
+							.username(dashBoard.getUsername().getUsername())
+							.nickname(dashBoard.getNickname())
+							.createdAt(dashBoard.getCreatedAt())
+							.enabled(true)
+							.build())
+					.collect(Collectors.toList()))
+					.page(page.getNumber()+1)
+					.size(page.getSize())
+					.totalPages(page.getTotalPages())
+					.totalElements(page.getTotalElements())
+					.first(page.isFirst())
+					.last(page.isLast())
+					.build();
+					
+					
+					
+		
+			return dashResponseDto;
 	}
 	
 	public DashBoardDto getDashBoard(Long id){
@@ -96,7 +117,8 @@ public class DashBoardService {
 				.content(dashboards.getContent())
 				.username(dashboards.getUsername().getUsername())
 				.nickname(dashboards.getNickname())
-				.createdAt(dashboards.getCreated_at())
+				.createdAt(dashboards.getCreatedAt())
 				.build();
 	}
+	
 }
