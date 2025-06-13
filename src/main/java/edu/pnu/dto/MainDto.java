@@ -16,8 +16,7 @@ import lombok.ToString;
 public class MainDto {
 	private CommentDto comment;
 	private List<CommentDto> comments;
+	private DashResponseDto dashResponseDto;
 	private DashBoardDto dashboard;
-	private List<DashBoardDto> dashboards;
-	private DashBoardDto dsboard;
 	private MemberDto member;
 }
