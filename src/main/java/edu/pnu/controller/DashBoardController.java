@@ -35,7 +35,7 @@ public class DashBoardController {
 			@RequestParam (name="page",defaultValue= "1")int pageNum
 			,@RequestParam (name="size",defaultValue= "10")	int pageSize
 			,@RequestParam (defaultValue = "latest")String method
-			,@RequestParam String q){
+			,@RequestParam (defaultValue = "")String q){
 		
 		MainDto data = MainDto.builder()
 				.dashResponseDto(dashBoardService.getDashBoards(pageNum,pageSize,method,q))

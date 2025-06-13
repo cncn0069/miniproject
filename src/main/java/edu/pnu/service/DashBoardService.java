@@ -66,17 +66,27 @@ public class DashBoardService {
 	public DashResponseDto getDashBoards(int pageNum,int pageSize,String method,String q){
 		
 		Pageable pageable = null;		
-		
 		 if(method.equals("latest")) {
 				pageable = PageRequest.of(pageNum-1, pageSize,
 							Sort.by("createdAt").descending());
+				
 		}else if(method.equals("oldest")) {
 				pageable = PageRequest.of(pageNum-1, pageSize,
 						Sort.by("createdAt").ascending());
+		}else if(method.equals("title")) {
+			pageable = PageRequest.of(pageNum-1, pageSize,
+					Sort.by("title").ascending());
+		}else if(method.equals("nickname")) {
+			pageable = PageRequest.of(pageNum-1, pageSize,
+					Sort.by("nickname").ascending());
 		}
-		
-		
-		Page<DashBoard> page = dashBoardRepository.getDashBoardAllEnabledNotFalse(pageable);
+		Page<DashBoard> page = null;
+		if(q.equals("")) {
+			page = dashBoardRepository.getDashBoardAllEnabledNotFalse(pageable);
+		}else {
+			page = dashBoardRepository.getDashBoardByQAndEnabledNotFalse(pageable,q);
+		}
+
 		
 		
 		DashResponseDto dashResponseDto = DashResponseDto.builder()
