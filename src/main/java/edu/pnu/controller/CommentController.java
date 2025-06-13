@@ -28,7 +28,6 @@ public class CommentController {
 	
 	@PostMapping("/api/comment/read")
 	public ObjectDto readComment(@RequestBody ObjectDto dto) {
-		System.out.println("comment");
 		MainDto data = MainDto.builder().
 				comments(commentService.readComment(dto.getContent().getComment()))
 				.build();

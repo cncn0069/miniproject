@@ -2,6 +2,7 @@ package edu.pnu.config.filter;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.pnu.domain.Member;
+import edu.pnu.service.LogService;
 import edu.pnu.util.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 	private final AuthenticationManager authenticationManager;
 	
+
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
@@ -63,6 +66,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //		
 //		cookie = new Cookie("userinfo", user.getUsername());
 //		response.addCookie(cookie);
+		//로그인 로그 저장
+
+		
 		String token = JWTUtil.getJWT(user.getUsername());
 		
 		response.addHeader(HttpHeaders.AUTHORIZATION,token);

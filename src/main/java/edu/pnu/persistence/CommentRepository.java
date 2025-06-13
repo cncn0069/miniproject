@@ -19,6 +19,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long>{
 	
 	@Query("SELECT c From Comment c	where c.parent_id = :parentId and c.dash_id.dash_id = :dashId")
 	List<Comment> getCommentByDashIdAndParentIdOrderByCreatedAt(Long dashId, Long parentId);
-	@Query("SELECT c From Comment c	where c.parent_id = :parentId and c.dash_id.dash_id = :dashId order by c.created_at")
+	@Query("SELECT c From Comment c	where c.parent_id = :parentId and c.dash_id.dash_id = :dashId order by c.created_at desc")
 	List<Comment> getCommentDashIdAndParentIdOrderByCreatedAtDesc(Long dashId, Long parentId);
 }

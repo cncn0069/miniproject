@@ -8,6 +8,7 @@ import java.util.Deque;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import edu.pnu.domain.Comment;
@@ -31,11 +32,10 @@ public class CommentService {
 	MemberRepository memberRepository;
 	
 	public void writeComment(CommentDto dto){
-		
-		DashBoard dashboard = dashBoardRepository.findById(dto.getDash_id()).get();
+		DashBoard dashboard = dashBoardRepository.findById(dto.getDash_id()).orElseThrow(()->new IllegalArgumentException("게시글이 존재하지 않습니다!"));
 		Member member;
 		try {
-			member = memberRepository.findById(dto.getUsername()).orElseThrow(()->new UserPrincipalNotFoundException("NoUserName"));
+			member = memberRepository.findById(dto.getUsername()).orElseThrow(()->new UsernameNotFoundException("NoUserName"));
 			//그냥 새로 댓글을 만든다면
 			if(dto.getParent_id() == null) {
 				commentRepo.save(Comment.builder()
@@ -48,7 +48,9 @@ public class CommentService {
 						.build());
 			}else {
 			//대 댓글
-				Comment parent = commentRepo.findById(dto.getParent_id()).orElseThrow(()->new UserPrincipalNotFoundException("NoComment"));
+				
+				Comment parent = commentRepo.findById(dto.getParent_id()).orElseThrow(()->new IllegalArgumentException("댓글이 존재하지 않습니다!"));
+
 				
 				commentRepo.save(Comment.builder()
 						.dash_id(dashboard)
@@ -62,7 +64,7 @@ public class CommentService {
 						.build());
 			}
 			
-		} catch (UserPrincipalNotFoundException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

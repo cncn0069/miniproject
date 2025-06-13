@@ -13,7 +13,9 @@ import edu.pnu.decoration.ObjectDeco;
 import edu.pnu.dto.MainDto;
 import edu.pnu.dto.ObjectDto;
 import edu.pnu.service.MemberService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 public class MemberController {
 
@@ -23,15 +25,22 @@ public class MemberController {
 	@GetMapping({"/loged-in/user","/memberinfo"})
 	public ObjectDto memberInfo(Authentication authentication) {
 //		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User user = (User)authentication.getPrincipal(); 
+		try {
+			User user = (User)authentication.getPrincipal(); 
+			
+			return new ObjectDeco(
+					MainDto.builder()
+					.member(
+							memberService.getMemberInfo(user.getUsername())
+					)
+					.build())
+					.getObjectDtoDeco();
+		}catch (NullPointerException e) {
+			// TODO: handle exception
+			log.info("로그인 하지 않은 사용자.");
+		}
 		
-		return new ObjectDeco(
-				MainDto.builder()
-				.member(
-						memberService.getMemberInfo(user.getUsername())
-				)
-				.build())
-				.getObjectDtoDeco();
+		return null;
 	}
 	
 }
