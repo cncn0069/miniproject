@@ -1,5 +1,7 @@
 package edu.pnu.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,10 +37,11 @@ public class DashBoardController {
 			@RequestParam (name="page",defaultValue= "1")int pageNum
 			,@RequestParam (name="size",defaultValue= "10")	int pageSize
 			,@RequestParam (defaultValue = "latest")String method
-			,@RequestParam (defaultValue = "")String q){
+			,@RequestParam (defaultValue = "")String q
+			,@RequestParam(name="writer")String writer){
 		
 		MainDto data = MainDto.builder()
-				.dashResponseDto(dashBoardService.getDashBoards(pageNum,pageSize,method,q))
+				.dashResponseDto(dashBoardService.getDashBoards(pageNum,pageSize,method,q,writer))
 				.build();
 		
 		return ResponseEntity.ok(new ObjectDeco(data).getObjectDtoDeco());
@@ -57,5 +60,10 @@ public class DashBoardController {
 	@PostMapping("api/post/delete")
 	public void deleteDashBoard(@RequestParam Long dashId) {
 		dashBoardService.deleteDashBoard(dashId);
+	}
+	
+	@GetMapping("writersinfo")
+	public List<String> writersInfo(){
+		return dashBoardService.getWritersInfo();
 	}
 }

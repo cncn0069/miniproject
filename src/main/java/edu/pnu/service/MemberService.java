@@ -1,5 +1,6 @@
 package edu.pnu.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +37,22 @@ public class MemberService {
 		
 		return dto;
 		
+	}
+	
+	public List<MemberDto> getMembersInfo(){
+		List<String> members = memberRepo.getAllNickname();
+		
+		List<MemberDto> dtos = new ArrayList<>();
+		
+		for(String member: members) {
+			dtos.add(MemberDto.builder()
+					.nickname(member)
+					.build());
+		}
+		
+		
+		
+		return dtos;
 	}
 
 }

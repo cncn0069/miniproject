@@ -1,6 +1,7 @@
 package edu.pnu.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class DashBoardService {
 					.build());
 			
 		}	
-	public DashResponseDto getDashBoards(int pageNum,int pageSize,String method,String q){
+	public DashResponseDto getDashBoards(int pageNum,int pageSize,String method,String q,String writer){
 		
 		Pageable pageable = null;		
 		 if(method.equals("latest")) {
@@ -81,10 +82,14 @@ public class DashBoardService {
 					Sort.by("nickname").ascending());
 		}
 		Page<DashBoard> page = null;
-		if(q.equals("")) {
+		if(q.equals("") && writer.equals("")) {
 			page = dashBoardRepository.getDashBoardAllEnabledNotFalse(pageable);
-		}else {
+		}else if(q.equals("") && !writer.equals("")){
+			page = dashBoardRepository.getDashBoardByNickNameAndEnabledNotFalse(pageable, writer);
+		}else if(!q.equals("") && writer.equals("")){
 			page = dashBoardRepository.getDashBoardByQAndEnabledNotFalse(pageable,q);
+		}else {
+			page = dashBoardRepository.getDashBoardByQAndNickNameAndEnabledNotFalse(pageable, q, writer);
 		}
 
 		
@@ -140,4 +145,7 @@ public class DashBoardService {
 		dashBoardRepository.save(dashBoard);
 	}
 	
+	public List<String> getWritersInfo(){
+		return dashBoardRepository.getNickNames();
+	}
 }
