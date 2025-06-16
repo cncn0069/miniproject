@@ -1,5 +1,7 @@
 package edu.pnu.controller;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,11 +30,13 @@ public class MemberController {
 		try {
 			User user = (User)authentication.getPrincipal(); 
 			
+
+			
 			return new ObjectDeco(
 					MainDto.builder()
 					.member(
 							memberService.getMemberInfo(user.getUsername())
-					)
+					) 
 					.build())
 					.getObjectDtoDeco();
 		}catch (NullPointerException e) {
@@ -41,6 +45,14 @@ public class MemberController {
 		}
 		
 		return null;
+	}
+	
+	@GetMapping("/membersinfo")
+	public ObjectDto membersInfo() {
+		return new ObjectDeco(
+				MainDto.builder()
+				.members(memberService.getMembersInfo())
+				.build()).getObjectDtoDeco();
 	}
 	
 }
