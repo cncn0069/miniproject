@@ -20,6 +20,7 @@ public class MemberController {
 	@Autowired
 	MemberService memberService;
 	
+	
 	@GetMapping({"/loged-in/user","/memberinfo"})
 	public ResponseEntity<?> memberInfo(Authentication authentication) {
 //		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -42,6 +43,14 @@ public class MemberController {
 		return new ObjectDeco(
 				MainDto.builder()
 				.members(memberService.getNicknamesInfo())
+				.build()).getObjectDtoDeco();
+	}
+	
+	@GetMapping("/recentPages")
+	public ObjectDto recentPages(Authentication authentication) {
+		
+		return new ObjectDeco(MainDto.builder()
+				.recentPages(memberService.getRecentPages(authentication.getName()))
 				.build()).getObjectDtoDeco();
 	}
 	
