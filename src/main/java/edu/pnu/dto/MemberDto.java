@@ -25,6 +25,7 @@ public class MemberDto{
 	private String nickname;
 	private List<Role> role;
 	private boolean enabled;
+	private String address;
 	private LocalDateTime created_at;
 	private String jwtToken;	
 }

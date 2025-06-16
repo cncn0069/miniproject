@@ -38,8 +38,8 @@ public class SecurityController {
 	
 	@GetMapping("/")
 	public void index(HttpServletResponse response) throws IOException{
-//		response.sendRedirect("http://localhost:3000/");
-		response.sendRedirect("http://kdtminiproject.myvnc.com:3000/");
+		response.sendRedirect("http://localhost:3000/");
+//		response.sendRedirect("http://kdtminiproject.myvnc.com:3000/");
 	}
 	@PostMapping("/api/user")
 	public ResponseEntity<?> jwtCallBack(HttpServletRequest request){
