@@ -27,7 +27,8 @@ import lombok.ToString;
 public class DashBoard {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long dash_id;
+	@Column(name = "dash_id")
+	private Long dashId;
 	//@ManyToOne(fetch = FetchType.LAZY)
 	@ManyToOne
 	@JoinColumn(name = "username")

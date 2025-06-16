@@ -15,6 +15,6 @@ public interface DashBoardRepository extends JpaRepository<DashBoard, Long>{
 	Page<DashBoard> getDashBoardByQAndEnabledNotFalse(Pageable pageable,String q);
 	
 //	@Query("select new edu.pnu.dto.DashBoardDto(d.dashId, d.title, d.content, d.username, d.nickname, d.createdAt) from DashBoard d")
-	@Query("SELECT d FROM DashBoard d where d.dash_id = :id and d.enabled = true")
+	@Query("SELECT d FROM DashBoard d where d.dashId = :id and d.enabled = true")
 	DashBoard getByIdEnabledNotFalse(Long id);
 }

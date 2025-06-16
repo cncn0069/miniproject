@@ -20,7 +20,7 @@ public class CommentDto {
 	private String nickname;
 	private String content;
 	private Long parent_id;
-	private Long dash_id;
+	private Long dashId;
 	private int depth;
 	private Long comment_id;
 	private Boolean enabled;

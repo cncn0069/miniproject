@@ -28,7 +28,7 @@ public class Comment {
 	private Long comment_id;
 	@ManyToOne
 	@JoinColumn(name = "dash_id")
-	private DashBoard dash_id;
+	private DashBoard dashId;
 	private Boolean enabled;
 	@ManyToOne
 	@JoinColumn(name = "username")
