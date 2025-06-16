@@ -31,14 +31,14 @@ public class CommentService {
 	MemberRepository memberRepository;
 	
 	public void writeComment(CommentDto dto){
-		DashBoard dashboard = dashBoardRepository.findById(dto.getDash_id()).orElseThrow(()->new IllegalArgumentException("게시글이 존재하지 않습니다!"));
+		DashBoard dashboard = dashBoardRepository.findById(dto.getDashId()).orElseThrow(()->new IllegalArgumentException("게시글이 존재하지 않습니다!"));
 		Member member;
 		try {
 			member = memberRepository.findById(dto.getUsername()).orElseThrow(()->new UsernameNotFoundException("NoUserName"));
 			//그냥 새로 댓글을 만든다면
 			if(dto.getParent_id() == null) {
 				commentRepo.save(Comment.builder()
-						.dash_id(dashboard)
+						.dashId(dashboard)
 						.content(dto.getContent())
 						.username(member)
 						.nickname(dto.getNickname())
@@ -52,7 +52,7 @@ public class CommentService {
 
 				
 				commentRepo.save(Comment.builder()
-						.dash_id(dashboard)
+						.dashId(dashboard)
 						.content(dto.getContent())
 						.username(member)
 						.nickname(dto.getNickname())
@@ -76,7 +76,7 @@ public class CommentService {
 		List<CommentDto> results = new ArrayList<>();
 		//같은 게시글이면서
 		//제일 최상단의 댓글들
-		 List<Comment> comments = commentRepo.getCommentByParentIdIsNullAndDashId(dto.getDash_id());
+		 List<Comment> comments = commentRepo.getCommentByParentIdIsNullAndDashId(dto.getDashId());
 		 Deque<Comment> dfsCom = new ArrayDeque<>();
 		 
 		 for(Comment comment:comments) {
@@ -92,7 +92,7 @@ public class CommentService {
 						.username(comment.getUsername().getUsername())
 						.nickname(comment.getNickname())
 						.created_at(comment.getCreated_at())
-						.dash_id(comment.getDash_id().getDash_id())
+						.dashId(comment.getDashId().getDashId())
 						.comment_id(comment.getComment_id())
 						.depth(comment.getDepth())
 						.enabled(comment.getEnabled())
@@ -105,7 +105,7 @@ public class CommentService {
 			}
 			
 			//상단 comment와 같은 comment들 즉 하위 comment 찾기
-			List<Comment> subcomments = commentRepo.getCommentDashIdAndParentIdOrderByCreatedAtDesc(dto.getDash_id(),comment.getComment_id());
+			List<Comment> subcomments = commentRepo.getCommentDashIdAndParentIdOrderByCreatedAtDesc(dto.getDashId(),comment.getComment_id());
 			//추가
 			
 			for(Comment subcomment:subcomments) {

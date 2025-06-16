@@ -35,7 +35,7 @@ public class DashBoardService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
 
 			dashBoardRepository.save(DashBoard.builder()
-					.dash_id(dto.getDash_id())
+					.dashId(dto.getDashId())
 					.username(member)
 					.nickname(member.getNickname())
 					.title(dto.getTitle())
@@ -44,7 +44,7 @@ public class DashBoardService {
 					.build());
 		}
 	public void insertDashBoard(DashBoardDto dto) throws AccessDeniedException{		
-			if(dto.getDash_id() != null)
+			if(dto.getDashId() != null)
 			{
 				log.info("잘못된 요청입니다.");
 				throw new AccessDeniedException("잘못된 접근입니다.");
@@ -92,7 +92,7 @@ public class DashBoardService {
 		DashResponseDto dashResponseDto = DashResponseDto.builder()
 					.dashboards(page.getContent().stream()
 					.map(dashBoard -> DashBoardDto.builder()
-							.dash_id(dashBoard.getDash_id())
+							.dashId(dashBoard.getDashId())
 							.title(dashBoard.getTitle())
 							.content(dashBoard.getContent())
 							.username(dashBoard.getUsername().getUsername())
@@ -124,7 +124,7 @@ public class DashBoardService {
 		}
 		
 		return DashBoardDto.builder()
-				.dash_id(dashboards.getDash_id())
+				.dashId(dashboards.getDashId())
 				.title(dashboards.getTitle())
 				.content(dashboards.getContent())
 				.username(dashboards.getUsername().getUsername())

@@ -18,7 +18,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DashBoardDto {
-	private Long dash_id;
+	private Long dashId;
     private String title;
     private String content;
     private String username; // Member의 username (문자열)

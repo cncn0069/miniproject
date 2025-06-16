@@ -10,15 +10,15 @@ import edu.pnu.domain.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment, Long>{
 	
-	@Query("SELECT c FROM Comment c WHERE c.dash_id.dash_id = :dashId")
-	List<Comment> getCommentByDashId(@Param("dashId") Long dashId);
+	@Query("SELECT c FROM Comment c WHERE c.dashId.dashId = :boardId")
+	List<Comment> getCommentByDashId(@Param("boardId") Long boardId);
 	
 	
-	@Query("SELECT c FROM Comment c WHERE c.parent_id is null and c.dash_id.dash_id = :dashId")
-	List<Comment> getCommentByParentIdIsNullAndDashId(Long dashId);
+	@Query("SELECT c FROM Comment c WHERE c.parent_id is null and c.dashId.dashId = :boardId")
+	List<Comment> getCommentByParentIdIsNullAndDashId(Long boardId);
 	
-	@Query("SELECT c From Comment c	where c.parent_id = :parentId and c.dash_id.dash_id = :dashId")
-	List<Comment> getCommentByDashIdAndParentIdOrderByCreatedAt(Long dashId, Long parentId);
-	@Query("SELECT c From Comment c	where c.parent_id = :parentId and c.dash_id.dash_id = :dashId order by c.created_at desc")
-	List<Comment> getCommentDashIdAndParentIdOrderByCreatedAtDesc(Long dashId, Long parentId);
+	@Query("SELECT c From Comment c	where c.parent_id = :parentId and c.dashId.dashId = :boardId")
+	List<Comment> getCommentByDashIdAndParentIdOrderByCreatedAt(Long boardId, Long parentId);
+	@Query("SELECT c From Comment c	where c.parent_id = :parentId and c.dashId.dashId = :boardId order by c.created_at desc")
+	List<Comment> getCommentDashIdAndParentIdOrderByCreatedAtDesc(Long boardId, Long parentId);
 }
