@@ -1,6 +1,7 @@
 package edu.pnu.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.pnu.domain.Furniture;
 import edu.pnu.dto.ApiResponseDTO;
 import edu.pnu.dto.ImagePermitRequestDTO;
 import edu.pnu.dto.ImagePermitResponseDTO;
@@ -46,13 +48,17 @@ public class PythonController {
 	@GetMapping("/api/inference/{jobid}/result")
 	public Mono<ResponseEntity<ApiResponseDTO<ImageProcessResultDTO>>> getImageResult(@PathVariable String jobid) {
 		log.info("Next.js 로 결과 이미지 반환");
+		
+		
+		
 		return imageProcessService.getImageFromFastApi(jobid);
 	}
 	
 	//이미지처리승인
 	@PostMapping("/api/inference/{jobid}/permission")
-	public Mono<ResponseEntity<ApiResponseDTO<ImagePermitResponseDTO>>>arrivepermitFromFront(@PathVariable String jobid,@RequestBody ImagePermitRequestDTO body){
+	public Mono<ApiResponseDTO<ResponseEntity<List<List<Furniture>>>>> arrivepermitFromFront(@PathVariable String jobid,@RequestBody ImagePermitRequestDTO body){
 		log.info("Next.js 로 부터 이미지 승인");
+		
 		return imagePermisionService.postImagepermit(jobid ,body);
 	}
 	

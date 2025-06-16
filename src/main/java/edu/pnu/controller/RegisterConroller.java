@@ -42,7 +42,8 @@ public class RegisterConroller {
 					.password(encoder.encode(membersEntity.getPassword()))
 					.nickname(membersEntity.getNickname())
 					.role(membersEntity.getRole())
-					.enabled(membersEntity.isEnabled())
+					.address(membersEntity.getAddress())
+					.enabled(true)
 					.created_at(LocalDateTime.now())
 					.build();
 			

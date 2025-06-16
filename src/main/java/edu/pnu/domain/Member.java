@@ -35,6 +35,7 @@ public class Member{
 	@CollectionTable(name = "member_roles", joinColumns = @JoinColumn(name = "username"))
 	@Column(columnDefinition = "varchar(32) default 'ROLE_MEMBER'")
 	private List<Role> role;
+	private String address;
 	@Column(columnDefinition = "boolean default true")
 	private boolean enabled;
 	private LocalDateTime created_at;

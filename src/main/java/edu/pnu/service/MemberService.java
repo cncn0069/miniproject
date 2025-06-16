@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import edu.pnu.domain.Member;
 import edu.pnu.dto.MemberDto;
 import edu.pnu.persistence.MemberRepository;
-import edu.pnu.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,14 +31,15 @@ public class MemberService {
 				.nickname(member.getNickname())
 				.username(member.getUsername())
 				.created_at(member.getCreated_at())
+				.address(member.getAddress())
 				.enabled(member.isEnabled())
 				.build();
 		
 		return dto;
 		
 	}
-	
-	public List<MemberDto> getMembersInfo(){
+	//닉네임 불러오기
+	public List<MemberDto> getNicknamesInfo(){
 		List<String> members = memberRepo.getAllNickname();
 		
 		List<MemberDto> dtos = new ArrayList<>();
