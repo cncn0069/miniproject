@@ -16,9 +16,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ImageProcessResultDTO {
-	private String message;
 	private String image_base64;
+	private String message;
 	private List<?> poly;
 	private List<?> names;
+	private List<?> type;
 	private List<?> viewSize;
 }

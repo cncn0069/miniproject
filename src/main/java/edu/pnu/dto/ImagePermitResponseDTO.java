@@ -17,4 +17,5 @@ public class ImagePermitResponseDTO {
 	private String jobid;
 	private List<Integer> selectedIdx;
 	private List<String> selectedname;
+	private List<String> selectedtype;
 }
