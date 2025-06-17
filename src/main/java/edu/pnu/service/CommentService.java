@@ -17,9 +17,7 @@ import edu.pnu.dto.CommentDto;
 import edu.pnu.persistence.CommentRepository;
 import edu.pnu.persistence.DashBoardRepository;
 import edu.pnu.persistence.MemberRepository;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 public class CommentService {
 	

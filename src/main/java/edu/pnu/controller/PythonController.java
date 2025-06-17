@@ -44,13 +44,10 @@ public class PythonController {
 		return  imageProcessService.sendImageToFastApi(imageUploadRequestDTO); //메세지받는것 까지는 동기 처리
 	}
 
-	//처리결과 조회 
+	//이미지처리결과 조회 
 	@GetMapping("/api/inference/{jobid}/result")
 	public Mono<ResponseEntity<ApiResponseDTO<ImageProcessResultDTO>>> getImageResult(@PathVariable String jobid) {
 		log.info("Next.js 로 결과 이미지 반환");
-		
-		
-		
 		return imageProcessService.getImageFromFastApi(jobid);
 	}
 	

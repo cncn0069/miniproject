@@ -21,6 +21,5 @@ public class MainDto {
 	private DashBoardDto dashboard;
 	private MemberDto member;
 	private List<MemberDto> members;
-	private List<List<Furniture>> furnitures;
-	private List<String> recentPages;
+	List<List<Furniture>> furnitures;
 }
