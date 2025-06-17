@@ -62,10 +62,10 @@ public class SecurityConfig {
 		http.sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		
-//		http.oauth2Login(o->o
-//				.loginPage("http://localhost:3000")
-//				.successHandler(successHandler)
-//				);
+		http.oauth2Login(o->o
+				.loginPage("http://localhost:3000")
+				.successHandler(successHandler)
+				);
 		
 		http.logout(logout->logout
 				.logoutUrl("/logout")

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,12 +16,16 @@ import edu.pnu.decoration.ObjectDeco;
 import edu.pnu.dto.MainDto;
 import edu.pnu.dto.ObjectDto;
 import edu.pnu.service.DashBoardService;
+import edu.pnu.service.UserRecentPageService;
 
 @RestController
 public class DashBoardController {
 
 	@Autowired
 	DashBoardService dashBoardService;
+	
+	@Autowired
+	UserRecentPageService pageService;
 	
 	@PostMapping("api/post/upload")
 	public void uploadDashBoard(@RequestBody ObjectDto dto) {
@@ -48,7 +53,11 @@ public class DashBoardController {
 	}
 	
 	@GetMapping("api/post/{id}")
-	public ResponseEntity<?> getDashBoard(@PathVariable Long id){
+	public ResponseEntity<?> getDashBoard(@PathVariable Long id,Authentication authentication){
+
+		if(authentication != null) {
+			pageService.setRecentPage(authentication.getName(), id);
+		}
 		
 		MainDto data = MainDto.builder()
 				.dashboard(dashBoardService.getDashBoard(id))
