@@ -55,8 +55,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 //		            srcToken = cookie.getValue();
 		            srcToken = URLDecoder.decode(cookie.getValue(),"utf-8");
 		            log.info("쿠키에서 토큰 수신됨: " + srcToken);
+		        }else {
+		        	log.info("불러와진 쿠키이름 : " + cookie.getName());
 		        }
 		    }
+		}else {
+			log.error("쿠키 없음");
 		}
 		
 		// 3. 토큰이 없거나 Bearer 형식이 아닐 경우 필터 패스
@@ -69,6 +73,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 		// 토큰 베어러 잘 못붙을 경우 대비
     	if (srcToken.startsWith("Bearer")) {
     		srcToken = srcToken.substring("Bearer".length()).trim();
+    		log.info("Bearer 수정 : " + srcToken);
+		}
+    	
+    	// 토큰 베어러+ 잘 못붙을 경우 대비
+    	if (srcToken.startsWith("+")) {
+    		srcToken = srcToken.substring("Bearer+".length()).trim();
     		log.info("Bearer 수정 : " + srcToken);
 		}
 
@@ -87,6 +97,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 		System.out.println(authentication.getName());
 		log.info("권한 인증 성공");
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		//리스폰스 헤더에 인증 정보 추가
+		//response.addHeader(HttpHeaders.AUTHORIZATION,JWTUtil.getJWT(jwtToken));
+		
 		filterChain.doFilter(request, response);
 		log.info("권한 인가 성공");
 	}

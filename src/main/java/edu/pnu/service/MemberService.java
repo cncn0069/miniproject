@@ -23,6 +23,14 @@ public class MemberService {
 		return memberRepo.findById(username).get();
 	}
 	
+	public void setMember(MemberDto dto) {
+		
+		Member member = memberRepo.getMemberByUsername(dto.getUsername());
+		member.setNickname(dto.getNickname());
+		member.setAddress(dto.getAddress());
+		memberRepo.save(member);
+	}
+	
 	public MemberDto getMemberInfo(String name) {
 
 		Member member = memberRepo.findById(name).orElseThrow(()->new UsernameNotFoundException("not exsited id"));
@@ -49,8 +57,6 @@ public class MemberService {
 					.nickname(member)
 					.build());
 		}
-		
-		
 		
 		return dtos;
 	}

@@ -37,7 +37,7 @@ public class CommentController {
 	}
 	
 	@PostMapping("/api/comment/delete")
-	public void deleteDashBoard(@RequestParam Long id) {
+	public void deleteComment(@RequestParam Long id) {
 		commentService.deleteComment(id);
 	}
 }
