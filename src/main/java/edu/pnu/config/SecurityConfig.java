@@ -52,6 +52,7 @@ public class SecurityConfig {
 				.requestMatchers("/admin/**").hasRole("ADMIN")
 				.requestMatchers("/loginCheck/**").authenticated()
 				.requestMatchers("/h2-console/**").permitAll()
+				.requestMatchers("/error").permitAll()
 				.anyRequest().permitAll()
 				);
 		http.csrf(c->c.disable());
@@ -62,33 +63,17 @@ public class SecurityConfig {
 		http.sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		
-//		http.oauth2Login(o->o
-//				.loginPage("http://localhost:3000")
-//				.successHandler(successHandler)
-//				);
-		
-		http.logout(logout->logout
-				.logoutUrl("/logout")
-				.logoutSuccessHandler((request,response,authentication)->{
-					SecurityContextHolder.clearContext();
-					Cookie cookie = new Cookie("jwtToken", null);
-					cookie.setHttpOnly(true);//JS에서 접근 불가 (보안 목적)
-					cookie.setSecure(false);//	HTTPS에서만 동작하도록 설정
-					cookie.setPath("/");
-					cookie.setMaxAge(0);
-					response.addCookie(cookie);
-					response.setStatus(HttpServletResponse.SC_OK);//HTTP 상태 코드를 200 OK로 설정
-					response.setContentType("application/json");//응답 본문(Response Body)의 형식
-					response.getWriter().write("{\"message\":\"로그아웃성공\"}");
-					response.getWriter().flush();//버퍼에 저장된 내용을 강제로 클라이언트로 전송
-					
-				}).permitAll()
-				
+		http.oauth2Login(o->o
+				.loginPage("http://localhost:3000")
+				.successHandler(successHandler)
 				);
+		
+		
 
         http.headers(headers -> headers
             .frameOptions(frame -> frame.sameOrigin()) // frameOptions sameOrigin 허용
         );
+        
 		
 		return http.build();
 	}

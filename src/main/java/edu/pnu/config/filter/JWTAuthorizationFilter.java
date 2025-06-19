@@ -84,8 +84,9 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 		Member findMembers = opt.get();
 		User user = new User(findMembers.getUsername(),findMembers.getPassword(),AuthorityUtils.createAuthorityList(findMembers.getRole().toString()));
 		Authentication authentication  = new UsernamePasswordAuthenticationToken(user, null,user.getAuthorities());
-		System.out.println(authentication.getName());
+
 		log.info("권한 인증 성공");
+		log.info("로그인 시도 유저 {}",authentication.getName());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		filterChain.doFilter(request, response);
 		log.info("권한 인가 성공");
