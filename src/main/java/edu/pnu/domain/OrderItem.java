@@ -27,7 +27,7 @@ public class OrderItem {
 	@JoinColumn(name = "order_id")
 	private OrderTable orderId;
 	@Column(name="order_name")
-	private String orderName;
+	private String itemName;
 	@Column(name="item_price")
 	private Integer itemPrice;
 }
