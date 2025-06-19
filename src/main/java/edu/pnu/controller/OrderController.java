@@ -37,7 +37,7 @@ public class OrderController {
 						.order(orderService.readOrder(authentication.getName())).build()).build();
 	}
 	
-	@GetMapping("api/order/reads")
+	@GetMapping("/api/order/detail")
 	public ObjectDto itemsRead(@RequestParam Long orderId) {
 		return ObjectDto.builder()
 		.content(MainDto.builder()
