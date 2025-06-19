@@ -3,6 +3,7 @@ package edu.pnu.dto;
 import java.util.List;
 
 import edu.pnu.domain.Furniture;
+import edu.pnu.domain.OrderItem;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -23,4 +24,5 @@ public class MainDto {
 	private List<MemberDto> members;
 	private List<List<Furniture>> furnitures;
 	private OrderDto order;
+	private List<OrderItemDto> orderItems;
 }
