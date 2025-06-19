@@ -109,17 +109,4 @@ public class PythonController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
     }
 	
-	@GetMapping("/api/item")
-	public ResponseEntity<Map<String, Object>> sdfff() {
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("id", "usss");
-	    response.put("name", "uheif");
-	    response.put("price", 3000);
-	    response.put("currency", "390");
-
-	    return ResponseEntity.ok().body(response);
-	}
-
-	
-	
 }
