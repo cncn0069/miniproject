@@ -59,6 +59,7 @@ public class SecurityConfig implements WebMvcConfigurer{
 				.requestMatchers("/admin/**").hasRole("ADMIN")
 				.requestMatchers("/loginCheck/**").authenticated()
 				.requestMatchers("/h2-console/**").permitAll()
+				.requestMatchers("/error").permitAll()
 				.anyRequest().permitAll()
 				);
 		http.csrf(c->c.disable());
@@ -90,12 +91,14 @@ public class SecurityConfig implements WebMvcConfigurer{
 					response.getWriter().flush();//버퍼에 저장된 내용을 강제로 클라이언트로 전송
 					
 				}).permitAll()
-				
 				);
+		
+		
 
         http.headers(headers -> headers
             .frameOptions(frame -> frame.sameOrigin()) // frameOptions sameOrigin 허용
         );
+        
 		
 		return http.build();
 	}
