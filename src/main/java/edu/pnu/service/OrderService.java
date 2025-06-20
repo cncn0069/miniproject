@@ -57,6 +57,7 @@ public class OrderService {
 		
 	}
 	
+
 	public List<OrderDto> readOrders(String username) {
 		Member member = memberRepo.getMemberByUsername(username);
 		
@@ -101,6 +102,7 @@ public class OrderService {
 					.itemPrice(item.getItemPrice())
 					.build());	
 		}
+
 		
 		OrderTable order = orderRepo.findById(orderId).get();
 		//파일 패스를 찾아서
