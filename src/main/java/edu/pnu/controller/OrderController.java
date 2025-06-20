@@ -30,17 +30,17 @@ public class OrderController {
 		orderService.createOrder(dto.getContent().getOrder());
 	}
 	
-	@GetMapping("/api/order/read")
+	@GetMapping("/api/order/reads")
 	public ObjectDto orderRead(Authentication authentication) {
 		return ObjectDto.builder()
 				.content(MainDto.builder()
-						.order(orderService.readOrder(authentication.getName())).build()).build();
+						.orders(orderService.readOrders(authentication.getName())).build()).build();
 	}
 	
 	@GetMapping("/api/order/detail")
 	public ObjectDto itemsRead(@RequestParam Long orderId) {
 		return ObjectDto.builder()
 		.content(MainDto.builder()
-				.orderItems(orderService.getOrderItems(orderId)).build()).build();
+				.orderResponse(orderService.getOrderItems(orderId)).build()).build();
 	}
 }
