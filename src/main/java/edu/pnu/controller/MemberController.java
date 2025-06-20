@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.pnu.decoration.ObjectDeco;
@@ -19,7 +21,6 @@ public class MemberController {
 
 	@Autowired
 	MemberService memberService;
-	
 	
 	@GetMapping({"/loged-in/user","/memberinfo"})
 	public ResponseEntity<?> memberInfo(Authentication authentication) {
@@ -46,12 +47,12 @@ public class MemberController {
 				.build()).getObjectDtoDeco();
 	}
 	
-	@GetMapping("/recentPages")
-	public ObjectDto recentPages(Authentication authentication) {
-		
-		return new ObjectDeco(MainDto.builder()
-				.recentPages(memberService.getRecentPages(authentication.getName()))
-				.build()).getObjectDtoDeco();
+	@PostMapping("/api/useredit")
+	public void userEdit(@RequestBody ObjectDto dto,Authentication authentication) {
+		//토큰 인증정보와 dto user 정보가 같으면
+		if(dto.getContent().getMember().getUsername().equals(authentication.getName())) {
+			memberService.setMember(dto.getContent().getMember());
+		}
 	}
 	
 }

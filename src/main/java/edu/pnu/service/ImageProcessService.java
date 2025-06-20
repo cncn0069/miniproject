@@ -4,15 +4,22 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.security.concurrent.DelegatingSecurityContextExecutor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.security.core.context.SecurityContext;
+
 
 import edu.pnu.dto.ApiResponseDTO;
 import edu.pnu.dto.ImageProcessResultDTO;
@@ -21,6 +28,8 @@ import edu.pnu.dto.ImageUploadResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 //추후 기능 많아지면 분리해야함
 @Slf4j
 @Service
@@ -73,7 +82,8 @@ public class ImageProcessService {
 	 * */
 	
 	//이미지 전송
-	public Mono<ResponseEntity<ApiResponseDTO<ImageUploadResponseDTO>>> sendImageToFastApi(ImageUploadRequestDTO imageUploadRequestDTO) throws IOException{
+	public Mono<ResponseEntity<ApiResponseDTO<ImageUploadResponseDTO>>> sendImageToFastApi(
+			ImageUploadRequestDTO imageUploadRequestDTO) throws IOException{
 		
 		log.info("FastAPI로 이미지 전송 시작 - username: {}, 파일명: {}, 크기: {} bytes, 타입: {}",
 				imageUploadRequestDTO.getUsername(),
@@ -97,6 +107,7 @@ public class ImageProcessService {
         
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
         builder.part("image", resource).filename(filename).contentType(mediaType);
+        builder.part("username", imageUploadRequestDTO.getUsername());
         
 		return fastApiWebClient.post()
 				.uri("/fastapi/inference")
@@ -129,8 +140,106 @@ public class ImageProcessService {
 						log.warn("임시 파일 삭제 실패 : ", tempFile.getAbsolutePath());
 					}
 	            }).doOnError(error -> log.error("FastAPI 에러: {}", error.getMessage()));
-		
 	}
+	
+
+	public ResponseEntity<ApiResponseDTO<ImageUploadResponseDTO>> sendImageToFastApi2(
+	        ImageUploadRequestDTO imageUploadRequestDTO, Authentication savedAuth, String token) throws IOException {
+
+	    String contentType = Optional.ofNullable(imageUploadRequestDTO.getImage().getContentType())
+	            .orElse(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+	    String filename = Optional.ofNullable(imageUploadRequestDTO.getImage().getOriginalFilename())
+	            .filter(name -> !name.isBlank())
+	            .orElse("upload-" + UUID.randomUUID());
+
+	    MediaType mediaType = MediaType.parseMediaType(contentType);
+	    File tempFile = File.createTempFile("upload-", "-" + filename);
+	    imageUploadRequestDTO.getImage().transferTo(tempFile);
+	    FileSystemResource resource = new FileSystemResource(tempFile);
+
+	    MultipartBodyBuilder builder = new MultipartBodyBuilder();
+	    builder.part("image", resource).filename(filename).contentType(mediaType);
+	    builder.part("username", imageUploadRequestDTO.getUsername());
+
+	    // ✅ SecurityContext 수동 설정
+	    SecurityContext context = SecurityContextHolder.createEmptyContext();
+	    context.setAuthentication(savedAuth);
+	    SecurityContextHolder.setContext(context);
+
+	    return fastApiWebClient.post()
+	        .uri("/fastapi/inference")
+	        .header("Authorization", token)
+	        .contentType(MediaType.MULTIPART_FORM_DATA)
+	        .body(BodyInserters.fromMultipartData(builder.build()))
+	        .retrieve()
+	        .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<ImageUploadResponseDTO>>() {})
+	        .doOnNext(apiResponse -> log.info("FastAPI 응답 JSON: {}", apiResponse))
+	        .map(apiResponse -> ResponseEntity.ok(apiResponse))
+	        .doOnError(error -> log.error("FastAPI 에러: {}", error.getMessage()))
+	        .doFinally(signalType -> {
+	            boolean deleted = tempFile.delete();
+	            if (deleted) {
+	                log.info("임시 파일 삭제 성공: {}", tempFile.getAbsolutePath());
+	            } else {
+	                log.warn("임시 파일 삭제 실패: {}", tempFile.getAbsolutePath());
+	            }
+	            // ✅ SecurityContext 정리
+	            SecurityContextHolder.clearContext();
+	        }).block();
+	}
+	
+
+	public Mono<ResponseEntity<ApiResponseDTO<ImageUploadResponseDTO>>> sendImageToFastApi3(
+	        ImageUploadRequestDTO imageUploadRequestDTO, String token) throws IOException {
+
+		String filename = Optional.ofNullable(imageUploadRequestDTO.getImage().getOriginalFilename())
+	            .filter(name -> !name.isBlank())
+	            .orElse("upload-" + UUID.randomUUID());
+	    File tempFile = File.createTempFile("upload-", "-" + filename);
+	    
+	    String contentType = Optional.ofNullable(imageUploadRequestDTO.getImage().getContentType())
+	            .orElse(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+	    MediaType mediaType = MediaType.parseMediaType(contentType);
+	    
+		
+	    imageUploadRequestDTO.getImage().transferTo(tempFile);
+	    FileSystemResource resource = new FileSystemResource(tempFile);
+
+	    MultipartBodyBuilder builder = new MultipartBodyBuilder();
+	    builder.part("image", resource).filename(filename).contentType(mediaType);
+	    builder.part("username", imageUploadRequestDTO.getUsername());
+	    
+	    // 현재 인증 정보 (컨트롤러에서 진입 시 보장)
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if (auth != null && auth.isAuthenticated()) {
+	        log.info("인증된 사용자: {}", auth.getName());
+	    }
+
+	    ExecutorService threadPool = Executors.newCachedThreadPool();
+	    DelegatingSecurityContextExecutor securedExecutor = new DelegatingSecurityContextExecutor(threadPool);
+	    Scheduler securedScheduler = Schedulers.fromExecutor(securedExecutor);
+
+	    return fastApiWebClient.post()
+	            .uri("/fastapi/inference")
+	            .header("Authorization", token)
+	            .contentType(MediaType.MULTIPART_FORM_DATA)
+	            .bodyValue(builder.build())
+	            .retrieve()
+	            .bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<ImageUploadResponseDTO>>() {})
+	            .subscribeOn(securedScheduler) 
+	            .doOnNext(apiResponse -> log.info("FastAPI 응답 JSON: {}", apiResponse))
+	            .map(apiResponse -> ResponseEntity.ok(apiResponse))
+	            .doOnError(error -> log.error("FastAPI 에러: {}", error.getMessage()))
+	            .doFinally(signalType -> {
+	                boolean deleted = tempFile.delete();
+	                if (deleted) {
+	                    log.info("임시 파일 삭제 성공: {}", tempFile.getAbsolutePath());
+	                } else {
+	                    log.warn("임시 파일 삭제 실패: {}", tempFile.getAbsolutePath());
+	                }
+	            });
+	}
+
 
 	//처리결과 조회 폴링방식 택함 웹소켓, SSE, 콜백 URL, 메세지 큐 등이 있음 
 	public Mono<ResponseEntity<ApiResponseDTO<ImageProcessResultDTO>>> getImageFromFastApi(String jobid) {

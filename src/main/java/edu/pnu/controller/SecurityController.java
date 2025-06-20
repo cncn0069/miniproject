@@ -41,7 +41,7 @@ public class SecurityController {
 		response.sendRedirect("http://localhost:3000/");
 //		response.sendRedirect("http://kdtminiproject.myvnc.com:3000/");
 	}
-	@PostMapping("/api/user")
+	@GetMapping("/api/user")
 	public ResponseEntity<?> jwtCallBack(HttpServletRequest request){
 		log.info("SecuritController :  jwtCallBack");
 		String jwtToken = null;
@@ -57,60 +57,10 @@ public class SecurityController {
 			}
 			break;
 		}
+		log.info(jwtToken);
 		return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, jwtToken).build();
 	}
 	
-	/*
-	 * @GetMapping("/loged-in/user") public ResponseEntity<?>
-	 * getUserInfo(HttpServletRequest request){
-	 * log.info("SecuritController :  getUserInfo "+request.getHeader("Referer"));
-	 * String jwtToken = null; Cookie[] cookies = request.getCookies(); for(Cookie
-	 * cookie : cookies) { if(!cookie.getName().equals("jwtToken")) continue; try {
-	 * jwtToken = cookie.getValue(); } catch (Exception e) {
-	 * System.out.println(e.getMessage()); return
-	 * ResponseEntity.status(HttpStatus.BAD_REQUEST).body("토큰 디코딩 실패"); } break; }
-	 * 
-	 * if (jwtToken ==null) { return
-	 * ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰없음"); } try { String
-	 * username = JWT.require(Algorithm.HMAC256(JWTUtil.JWT_KEY)) .build()
-	 * .verify(jwtToken) .getClaim(JWTUtil.claimName) .asString(); Members member =
-	 * memberService.getMembers(username);
-	 * 
-	 * Map<String, Object> userInfo = new HashMap<>(); // userInfo.put("username",
-	 * username); userInfo.put("username", member.getUsername());
-	 * userInfo.put("nickname", member.getNickname()); userInfo.put("role",
-	 * member.getRole()); return ResponseEntity.ok(userInfo); } catch (Exception e)
-	 * { log.error("JWT 검증 실패: {}", e.getMessage()); return
-	 * ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰"); }
-	 * 
-	 * }
-	 */
-
-//	@GetMapping("/loged-in/user")
-//	public ResponseEntity<?> getUserInfo(Authentication auth){
-//		
-//		if (auth == null || !auth.isAuthenticated()) {
-//			log.info("getUserInfo : 호출 auth가 null 혹은 인증이 안되어있음 Axios withcredential 확인 필요");
-//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 되어있지 않음");
-//		}
-//		Map<String, Object> userInfo = new HashMap<>();
-//		 
-//		if (auth.getPrincipal() instanceof User user ) {
-//			userInfo.put("logintype", "DB등록유저");
-//			Member member = memberService.getMembers(user.getUsername());
-//			userInfo.put("username", member.getUsername());
-//			userInfo.put("nickname", member.getNickname());
-//			userInfo.put("role", member.getRole());
-//			userInfo.put("isLogin", "logged-in");
-//		}else if (auth.getPrincipal() instanceof OAuth2User oAuth2User) {
-//			String email = oAuth2User.getAttribute("email");
-//			userInfo.put("logintype", "Oauth2등록유저");
-//		}
-//		
-//		return ResponseEntity.ok(userInfo);
-//	}
-	
-
 	@GetMapping("/manager")
 	public String manager() {
 		return "manager";

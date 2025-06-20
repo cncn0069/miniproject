@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.pnu.decoration.ObjectDeco;
 import edu.pnu.dto.MainDto;
 import edu.pnu.dto.ObjectDto;
-import edu.pnu.persistence.UserRecentPagesRepository;
 import edu.pnu.service.DashBoardService;
-import edu.pnu.service.MemberService;
+import edu.pnu.service.UserRecentPageService;
 
 @RestController
 public class DashBoardController {
@@ -26,7 +25,7 @@ public class DashBoardController {
 	DashBoardService dashBoardService;
 	
 	@Autowired
-	MemberService memberService;
+	UserRecentPageService pageService;
 	
 	@PostMapping("api/post/upload")
 	public void uploadDashBoard(@RequestBody ObjectDto dto) {
@@ -55,12 +54,10 @@ public class DashBoardController {
 	
 	@GetMapping("api/post/{id}")
 	public ResponseEntity<?> getDashBoard(@PathVariable Long id,Authentication authentication){
-		
-		//방문한 게시글 url 저장
+
 		if(authentication != null) {
-			memberService.setRecentPage(authentication.getName(), id);
+			pageService.setRecentPage(authentication.getName(), id);
 		}
-		
 		
 		MainDto data = MainDto.builder()
 				.dashboard(dashBoardService.getDashBoard(id))
