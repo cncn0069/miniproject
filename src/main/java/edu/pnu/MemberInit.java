@@ -53,6 +53,15 @@ public class MemberInit implements ApplicationRunner{
 				.role(Arrays.asList(Role.ROLE_MEMBER, Role.ROLE_ADMIN))
 				.created_at(LocalDateTime.now())
 				.build());
+		memberRepository.save(Member.builder()
+				.username("a")
+				.password(encoder.encode("1"))
+				.nickname("a")
+				.address("부산시 파주동")
+				.enabled(true)
+				.role(Arrays.asList(Role.ROLE_MEMBER, Role.ROLE_ADMIN))
+				.created_at(LocalDateTime.now())
+				.build());
 		
 	
 	}

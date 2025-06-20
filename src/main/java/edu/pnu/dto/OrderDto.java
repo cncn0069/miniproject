@@ -1,6 +1,7 @@
 package edu.pnu.dto;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,16 +11,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Data
-public class UserRecentPagesDto {
-	private Long id;
+@Getter@Setter@ToString@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderDto {
+	private Long orderId;
+	private String filePath;
+	private Long totalPrice;
 	private String username;
-	private String url;
-	private LocalDateTime visitedAt;	
+	private LocalDateTime createdAt;
+	private Map<String,Integer> itemPrice;
 }

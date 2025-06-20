@@ -50,25 +50,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		User user = (User)authResult.getPrincipal();
-//		String token = JWT.create()
-//				.withExpiresAt(new Date(System.currentTimeMillis()+JWTUtil.ACCESS_TOKEN_MESC))
-//				.withClaim("username", user.getUsername())
-//				.sign(Algorithm.HMAC256("edu.pnu.jwt"));
-//		Cookie cookie = new Cookie("jwtToken", token);
-//		cookie.setHttpOnly(true);
-//		cookie.setSecure(false); // HTTPS 환경에서만 쿠키 전송됨
-//		cookie.setPath("/");
-//		cookie.setMaxAge((int)JWTUtil.ACCESS_TOKEN_MESC);
-//		response.addCookie(cookie);
-//		
-//		
-//		
-//		cookie = new Cookie("userinfo", user.getUsername());
-//		response.addCookie(cookie);
-		//로그인 로그 저장
-
-		
+		User user = (User)authResult.getPrincipal();		
 		String token = JWTUtil.getJWT(user.getUsername());
 		
 		response.addHeader(HttpHeaders.AUTHORIZATION,token);

@@ -5,7 +5,11 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -31,6 +35,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 	@Lazy @Autowired
 	private PasswordEncoder encoder;
 	
+	@Value("${redirect.cookie.next}")
+	private String oauthCallBack;
+	
+//	@Value("${spring.server.ngrokIp")
+//	private String ngrokIp;
+	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
@@ -44,11 +54,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 			log.error("on AuthenticationSuccess :  Oauth 응답에서 사용자 이름을 추출 할 수없음");
 			throw new ServletException("cannot generate username from oauth2user");
 		}
-		log.info("OAuth2 인증 성공 : " + username);
 		
 		String nick = null;
 		int lastIndexUnderbar = username.lastIndexOf("_");
-		if (lastIndexUnderbar != -1 && username.length() >lastIndexUnderbar+5) {
+		if (lastIndexUnderbar != -1 && username.length() > lastIndexUnderbar+5) {
 			nick = username.substring(0, lastIndexUnderbar+6);
 		}
 		
@@ -62,14 +71,17 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 				);
 		
 		String jwtToken = JWTUtil.getJWT(username);
-		Cookie jwtCookie = new Cookie("jwtToken", URLEncoder.encode(jwtToken,"utf-8"));
-		jwtCookie.setHttpOnly(true);
-		jwtCookie.setPath("/");
-		jwtCookie.setDomain("localhost");
-		jwtCookie.setMaxAge((int)JWTUtil.ACCESS_TOKEN_MESC);
-		response.addCookie(jwtCookie);
-		response.sendRedirect("http://localhost:3000");
-		log.info("OAuth2 인증 성공 종료 ");
-//		response.sendRedirect("http://kdtminiproject.myvnc.com:3000/");
+		ResponseCookie cookie = ResponseCookie.from("jwtToken", URLEncoder.encode(jwtToken, "utf-8"))
+		        .httpOnly(true)
+		        .secure(true)
+		        .sameSite("None") // ← 여기서 가능!
+		        .path("/")
+		        .maxAge((int)JWTUtil.ACCESS_TOKEN_MESC)
+		        .build();
+		//HTTPS연결에서만 쿠키가 저장 및 전송됨
+		response.addHeader("Set-Cookie",cookie.toString());
+		log.info("OAuth2 인증 성공");
+		response.sendRedirect(oauthCallBack);
+//		response.sendRedirect("http://localhost:3000/api/login/oauth2");
 	}
 }
