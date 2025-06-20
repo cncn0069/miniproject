@@ -26,4 +26,5 @@ public class MainDto {
 	private OrderDto order;
 	private List<OrderDto> orders;
 	private OrderResponse orderResponse;
+	private Long orderPrice;
 }

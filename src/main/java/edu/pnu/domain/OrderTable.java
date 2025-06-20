@@ -30,7 +30,7 @@ import lombok.ToString;
 public class OrderTable {
 	@Id
 	@Column(nullable = false,name = "order_id")
-	private Long orderId;
+	private String orderId;
 	@Column(nullable = false,name = "file_path")
 	private String filePath;
 	@ManyToOne

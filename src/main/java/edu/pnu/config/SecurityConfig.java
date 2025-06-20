@@ -143,7 +143,8 @@ public class SecurityConfig implements WebMvcConfigurer{
 	    		"http://10.125.121.176:3000",
 	    		nextjsIp,
 	    		cookiNext,
-	    		"http://localhost:3000"
+	    		"http://localhost:3000",
+	    		"http://10.125.121.186:3000"
 	    		)
 	    .allowedMethods("GET", "POST", "PUT", "DELETE")
 	    .allowCredentials(true)
