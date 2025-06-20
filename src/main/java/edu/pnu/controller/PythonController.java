@@ -1,14 +1,11 @@
 package edu.pnu.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,12 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.pnu.domain.Furniture;
 import edu.pnu.dto.ApiResponseDTO;
 import edu.pnu.dto.ImagePermitRequestDTO;
+import edu.pnu.dto.ImagePermitResponseDTO;
 import edu.pnu.dto.ImageProcessResultDTO;
 import edu.pnu.dto.ImageUploadRequestDTO;
 import edu.pnu.dto.ImageUploadResponseDTO;
+import edu.pnu.dto.IndexedFurnitureList;
 import edu.pnu.service.ImagePermisionService;
 import edu.pnu.service.ImageProcessService;
 import jakarta.servlet.RequestDispatcher;
@@ -87,18 +85,25 @@ public class PythonController {
 		return  imageProcessService.sendImageToFastApi2(imageUploadRequestDTO,currentAuth,token); //메세지받는것 까지는 동기 처리
 	}
 	
-	//이미지처리결과 조회 
+	//이미지처리결과 리턴
 	@GetMapping("/api/inference/{jobid}/result")
 	public Mono<ResponseEntity<ApiResponseDTO<ImageProcessResultDTO>>> getImageResult(@PathVariable String jobid) {
 		log.info("Next.js 로 결과 이미지 반환");
 		return imageProcessService.getImageFromFastApi(jobid);
 	}
 	
-	//이미지처리승인
+	//선택 결과 DB조회
 	@PostMapping("/api/inference/{jobid}/permission")
-	public Mono<ApiResponseDTO<ResponseEntity<List<List<Furniture>>>>> arrivepermitFromFront(@PathVariable String jobid,@RequestBody ImagePermitRequestDTO body){
+	public Mono<ApiResponseDTO<ResponseEntity<List<IndexedFurnitureList>>>> arrivepermitFromFront(@PathVariable String jobid,@RequestBody ImagePermitRequestDTO body){
 		log.info("Next.js 로 부터 이미지 승인");
 		return imagePermisionService.postImagepermit(jobid ,body);
+	}
+	
+	//최종 결제 시 마스킹 요청
+	@PostMapping("/api/inference/{jobid}/permission/final")
+	public Mono<ApiResponseDTO<ImagePermitResponseDTO>> arrivepaymentFromFront(@PathVariable String jobid,@RequestBody ImagePermitRequestDTO body){
+		log.info("Next.js 로 부터 최종 결제 데이터 {}", body);
+		return imagePermisionService.permitImageMaksing(jobid ,body);
 	}
 	
 	@GetMapping("/error")
