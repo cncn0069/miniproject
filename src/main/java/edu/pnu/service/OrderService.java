@@ -13,6 +13,7 @@ import edu.pnu.domain.OrderItem;
 import edu.pnu.domain.OrderTable;
 import edu.pnu.dto.OrderDto;
 import edu.pnu.dto.OrderItemDto;
+import edu.pnu.dto.OrderResponse;
 import edu.pnu.persistence.MemberRepository;
 import edu.pnu.persistence.OrderItemRepository;
 import edu.pnu.persistence.OrderRepository;
@@ -56,25 +57,31 @@ public class OrderService {
 		
 	}
 	
-	public OrderDto readOrder(String username) {
+	public List<OrderDto> readOrders(String username) {
 		Member member = memberRepo.getMemberByUsername(username);
 		
 		if(member == null) {
 			throw new UsernameNotFoundException("존재하지 않는 사용자입니다.");
 		}
 		
-		OrderTable order = orderRepo.findByMember(member);
+		List<OrderTable> orders = orderRepo.findByMember(member);
 		
-		return OrderDto.builder()
-				.orderId(order.getOrderId())
-				.filePath(order.getFilePath())
-				.totalPrice(order.getTotalPrice())
-				.username(order.getMember().getUsername())
-				.createdAt(order.getCreatedAt())
-				.build();
+		List<OrderDto> results = new ArrayList<>();
+		
+		for(OrderTable order:orders) {
+			results.add(OrderDto.builder()
+			.orderId(order.getOrderId())
+			.filePath(order.getFilePath())
+			.totalPrice(order.getTotalPrice())
+			.username(order.getMember().getUsername())
+			.createdAt(order.getCreatedAt())
+			.build());
+		}
+		
+		return results;
 	}
 	
-	public List<OrderItemDto> getOrderItems(Long orderId){
+	public OrderResponse getOrderItems(Long orderId){
 		
 		List<OrderItem> orderitem = orderItemRepo.getOrderItemByOrderId(orderId);
 		
@@ -87,6 +94,14 @@ public class OrderService {
 					.itemPrice(item.getItemPrice())
 					.build());	
 		}
-		return itemsDto;
+		
+		OrderTable order = orderRepo.findById(orderId).get();
+		//파일 패스를 찾아서
+		//OrderResponse에 리스트와 함꼐 담아서 보냄
+		OrderResponse orderResponse = OrderResponse.builder()
+				.filePath(order.getFilePath())
+				.orderItems(itemsDto)
+				.build();
+		return orderResponse;
 	}
 }
