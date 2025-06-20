@@ -31,14 +31,21 @@ public class OrderController {
 	}
 	
 	@GetMapping("/api/order/reads")
-	public ObjectDto orderRead(Authentication authentication) {
+	public ObjectDto orderReads(Authentication authentication) {
 		return ObjectDto.builder()
 				.content(MainDto.builder()
 						.orders(orderService.readOrders(authentication.getName())).build()).build();
 	}
 	
+	@GetMapping("/api/order/valid")
+	public ObjectDto orderTotalPrice(@RequestParam String orderId) {
+		return ObjectDto.builder()
+				.content(MainDto.builder()
+						.orderPrice(orderService.readPrice(orderId)).build()).build();
+	}
+	
 	@GetMapping("/api/order/detail")
-	public ObjectDto itemsRead(@RequestParam Long orderId) {
+	public ObjectDto itemsRead(@RequestParam String orderId) {
 		return ObjectDto.builder()
 		.content(MainDto.builder()
 				.orderResponse(orderService.getOrderItems(orderId)).build()).build();

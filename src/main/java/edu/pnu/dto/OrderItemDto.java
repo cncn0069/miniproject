@@ -14,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItemDto {
-	private Long orderId;
+	private String orderId;
 	private String itemName;
 	private Integer itemPrice;
 }

@@ -81,7 +81,14 @@ public class OrderService {
 		return results;
 	}
 	
-	public OrderResponse getOrderItems(Long orderId){
+	public Long readPrice(String orderId) {
+		
+		OrderTable orders = orderRepo.findById(orderId).get();
+		
+		return orders.getTotalPrice();
+	}
+	
+	public OrderResponse getOrderItems(String orderId){
 		
 		List<OrderItem> orderitem = orderItemRepo.getOrderItemByOrderId(orderId);
 		
