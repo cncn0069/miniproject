@@ -54,4 +54,16 @@ public class FileService {
 				.body(imageBytes);
 		
 	}
+	
+	public ResponseEntity<byte[]> getProcessedImage(String imagePath) throws IOException{
+		File imageFile = new File(imagePath);
+		byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
+		
+		String contentType = Files.probeContentType(imageFile.toPath());
+		
+		return ResponseEntity.ok()
+				.contentType(MediaType.parseMediaType(contentType))
+				.body(imageBytes);
+		
+	}
 }

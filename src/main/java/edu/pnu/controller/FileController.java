@@ -33,4 +33,11 @@ public class FileController {
 		
 	}
 	
+	@GetMapping("/api/image/processed/{imagePath}")
+	public ResponseEntity<byte[]> getProcessedImage(@PathVariable String imagePath) throws IOException{
+		 ResponseEntity<byte[]> result = fileService.getImage(imagePath);
+		return result;
+		
+	}
+	
 }
