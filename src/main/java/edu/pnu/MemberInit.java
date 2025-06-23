@@ -1,9 +1,7 @@
 package edu.pnu;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -63,7 +61,15 @@ public class MemberInit implements ApplicationRunner{
 				.role(Arrays.asList(Role.ROLE_MEMBER, Role.ROLE_ADMIN))
 				.created_at(LocalDateTime.now())
 				.build());
-		
+		memberRepository.save(Member.builder()
+				.username("wjdqor0060	")
+				.password(encoder.encode("1"))
+				.nickname("a")
+				.address("부산시 파주동")
+				.enabled(true)
+				.role(Arrays.asList(Role.ROLE_MEMBER, Role.ROLE_ADMIN))
+				.created_at(LocalDateTime.now())
+				.build());
 	
 	}
 	

@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContext;
 
 
 import edu.pnu.dto.ApiResponseDTO;
+import edu.pnu.dto.ImagePermitResultImageDTO;
 import edu.pnu.dto.ImageProcessResultDTO;
 import edu.pnu.dto.ImageUploadRequestDTO;
 import edu.pnu.dto.ImageUploadResponseDTO;
@@ -256,8 +257,34 @@ public class ImageProcessService {
 							.data(null)
 							.build();
 					return Mono.just(ResponseEntity.status(503).body(fallback));
-				})
-				;
-	
+				});
 	}
+	
+	public ResponseEntity<ApiResponseDTO<ImagePermitResultImageDTO>> getImageFromFastApiFinalResult(String jobid) {
+		try {
+			ApiResponseDTO<ImagePermitResultImageDTO> response = fastApiWebClient.get()
+				.uri(uribuilder -> uribuilder
+					.path("/fastapi/inference/{jobid}/permission/result")
+					.build(jobid))
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<ApiResponseDTO<ImagePermitResultImageDTO>>() {})
+				.block(); // 동기 처리
+
+			log.info("파이썬 읽은 데이터: {}", response);
+
+			return ResponseEntity.ok().body(response);
+		} catch (Exception e) {
+			log.error("FastAPI 최종 결과 조회 에러 {}", e.getMessage());
+
+			ApiResponseDTO<ImagePermitResultImageDTO> fallback = ApiResponseDTO.<ImagePermitResultImageDTO>builder()
+				.status("503")
+				.message("FastApi 서버 응답 불가")
+				.data(null)
+				.build();
+
+			return ResponseEntity.status(503).body(fallback);
+		}
+	}
+	
+	
 }

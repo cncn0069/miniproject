@@ -13,8 +13,9 @@ public class WebClientConfig {
 	@Bean
 	public WebClient fastApiWebClient() {
 //		return WebClient.builder().baseUrl("http://localhost:8000").exchangeStrategies(strategies).build();
-		return WebClient.builder().baseUrl("http://192.168.219.104:8000").exchangeStrategies(strategies).build();
-//		return WebClient.builder().baseUrl("http://10.125.121.185:8000").exchangeStrategies(strategies).build();
+//		return WebClient.builder().baseUrl("http://192.168.219.104:8000").exchangeStrategies(strategies).build();
+		return WebClient.builder().baseUrl("http://10.125.121.185:8000").exchangeStrategies(strategies).build();
+>>>>>>> AR384Springserver
 //		return WebClient.builder().baseUrl("http://25.1.68.182:8000").exchangeStrategies(strategies).build();
 	}
 }
