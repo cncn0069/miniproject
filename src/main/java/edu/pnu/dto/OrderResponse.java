@@ -1,5 +1,9 @@
 package edu.pnu.dto;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,12 +13,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Data
-@Getter@Setter@ToString
-@Builder
+@Getter@Setter@ToString@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderItemDto {
-	private String orderId;
-	private String itemName;
-	private Integer itemPrice;
+public class OrderResponse {
+	private String filePath;
+	private OrderDto order;
+	private List<OrderItemDto> orderItems;
 }

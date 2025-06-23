@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-import reactor.util.function.Tuple2;
 import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
 
@@ -74,10 +73,8 @@ public class ImagePermisionService {
 	                int idx = triple.getT1();
 	                String item = triple.getT2();
 	                String type = triple.getT3();
-
 	                log.info("DB 조회: idx={}, item={}, type={}", idx, item, type);
-
-	                List<Furniture> list = furnitureRepo.getAllFurnitureByItemName(item, type);
+	                Furniture list = furnitureRepo.getAllFurnitureByItemName(item, type);
 	                return new IndexedFurnitureList(idx, list);
 	            }).subscribeOn(Schedulers.boundedElastic())
 	        )
