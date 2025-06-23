@@ -38,7 +38,7 @@ public class MemberInit implements ApplicationRunner{
 		
 		memberRepository.save(Member.builder()
 				.username("member1")
-				.password(encoder.encode("abcd"))
+				.password(encoder.encode("1"))
 				.nickname("nickname1")
 				.address("부산시 금정동")
 				.enabled(true)
@@ -47,7 +47,7 @@ public class MemberInit implements ApplicationRunner{
 				.build());
 		memberRepository.save(Member.builder()
 				.username("member2")
-				.password(encoder.encode("abcd"))
+				.password(encoder.encode("1"))
 				.nickname("nickname2")
 				.address("부산시 파주동")
 				.enabled(true)

@@ -1,7 +1,6 @@
 package edu.pnu.domain;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +29,7 @@ import lombok.ToString;
 public class OrderTable {
 	@Id
 	@Column(nullable = false,name = "order_id")
-	private Long orderId;
+	private String orderId;
 	@Column(nullable = false,name = "file_path")
 	private String filePath;
 	@ManyToOne

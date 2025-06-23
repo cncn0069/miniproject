@@ -16,7 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDto {
-	private Long orderId;
+	private String orderId;
 	private String filePath;
 	private Long totalPrice;
 	private String username;
