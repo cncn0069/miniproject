@@ -17,6 +17,7 @@ import edu.pnu.domain.Role;
 import edu.pnu.persistence.CommentRepository;
 import edu.pnu.persistence.DashBoardRepository;
 import edu.pnu.persistence.MemberRepository;
+
 @Component
 public class MemberInit implements ApplicationRunner{
 	
