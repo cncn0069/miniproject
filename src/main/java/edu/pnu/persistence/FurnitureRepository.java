@@ -12,15 +12,17 @@ public interface FurnitureRepository extends JpaRepository<Furniture, Long>{
 	
 	@Query(value =
 		    "SELECT * FROM (" +
-		    "   SELECT * FROM 가구류 WHERE 품명 LIKE CONCAT('%', :itemName, '%') " +
+		    "   SELECT * FROM `가구류` WHERE 품명 LIKE CONCAT('%', :itemName, '%') " +
 		    "   UNION ALL " +
-		    "   SELECT * FROM 가전제품 WHERE 품명 LIKE CONCAT('%', :itemName, '%') " +
+		    "   SELECT * FROM `가전제품` WHERE 품명 LIKE CONCAT('%', :itemName, '%') " +
 		    "   UNION ALL " +
 		    "   SELECT * FROM `생활용품 및 기타` WHERE 품명 LIKE CONCAT('%', :itemName, '%') " +
 		    ") AS sub " +
-		    "WHERE sub.규격 =	 :type ",
+		    "WHERE sub.규격 =	 :type " +
+		    "LIMIT 1",
 		    nativeQuery = true)
-	List<Furniture> getAllFurnitureByItemName(String itemName, String type);
+	Furniture getAllFurnitureByItemName(String itemName, String type);
 }
+
 
 

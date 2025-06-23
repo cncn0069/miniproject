@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -52,7 +53,8 @@ public class SecurityConfig implements WebMvcConfigurer{
 	
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-		//http.cors(cors->cors.configurationSource(corSource()));
+//		http.cors(cors->cors.configurationSource(corSource()));
+		http.cors(Customizer.withDefaults());
 		http.authorizeHttpRequests(security->security
 				.requestMatchers("/member/**").authenticated()
 				.requestMatchers("/manager/**").hasAnyRole("MANAGER","ADMIN")
@@ -144,9 +146,10 @@ public class SecurityConfig implements WebMvcConfigurer{
 	    		nextjsIp,
 	    		cookiNext,
 	    		"http://localhost:3000",
-	    		"http://10.125.121.186:3000"
+	    		"http://10.125.121.186:3000",
+	    		"https://kdtminiproject.myvnc.com:3000"
 	    		)
-	    .allowedMethods("GET", "POST", "PUT", "DELETE")
+	    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") 
 	    .allowCredentials(true)
 	    .exposedHeaders("Authorization");
 

@@ -7,7 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 
 //JWT 토큰 생성 Oauth2
 public class JWTUtil {
-	public static final long ACCESS_TOKEN_MESC = 10*(60*1000); //1000ms * 6 
+	public static final long ACCESS_TOKEN_MESC = 100*(60*1000); //1000ms * 6 
 	public static final String JWT_KEY = "edu.pnu.jwt";
 	public static final String claimName = "username";
 	public static final String PREFIX = "Bearer ";
