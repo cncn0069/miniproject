@@ -24,5 +24,7 @@ public class MainDto {
 	private List<MemberDto> members;
 	private List<List<Furniture>> furnitures;
 	private OrderDto order;
-	private List<OrderItemDto> orderItems;
+	private List<OrderDto> orders;
+	private OrderResponse orderResponse;
+	private Long orderPrice;
 }

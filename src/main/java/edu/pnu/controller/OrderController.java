@@ -30,17 +30,24 @@ public class OrderController {
 		orderService.createOrder(dto.getContent().getOrder());
 	}
 	
-	@GetMapping("/api/order/read")
-	public ObjectDto orderRead(Authentication authentication) {
+	@GetMapping("/api/order/reads")
+	public ObjectDto orderReads(Authentication authentication) {
 		return ObjectDto.builder()
 				.content(MainDto.builder()
-						.order(orderService.readOrder(authentication.getName())).build()).build();
+						.orders(orderService.readOrders(authentication.getName())).build()).build();
+	}
+	
+	@GetMapping("/api/order/valid")
+	public ObjectDto orderTotalPrice(@RequestParam String orderId) {
+		return ObjectDto.builder()
+				.content(MainDto.builder()
+						.orderPrice(orderService.readPrice(orderId)).build()).build();
 	}
 	
 	@GetMapping("/api/order/detail")
-	public ObjectDto itemsRead(@RequestParam Long orderId) {
+	public ObjectDto itemsRead(@RequestParam String orderId) {
 		return ObjectDto.builder()
 		.content(MainDto.builder()
-				.orderItems(orderService.getOrderItems(orderId)).build()).build();
+				.orderResponse(orderService.getOrderItems(orderId)).build()).build();
 	}
 }

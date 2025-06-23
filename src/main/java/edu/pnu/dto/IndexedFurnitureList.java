@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class IndexedFurnitureList {
     private int index;
-    private List<Furniture> furnitureList;
+    private Furniture furnitureList;
 }

@@ -25,11 +25,10 @@ public class MemberController {
 	@GetMapping({"/loged-in/user","/memberinfo"})
 	public ResponseEntity<?> memberInfo(Authentication authentication) {
 //		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User)authentication.getPrincipal(); 
+		log.info("로그인 시도 사용자  = {}",user);
 		try {
-			User user = (User)authentication.getPrincipal(); 
-			
-
-			
+			log.info("로그인 성공 = {}",user);
 			return ResponseEntity.ok(memberService.getMemberInfo(user.getUsername()));
 		}catch (NullPointerException e) {
 			// TODO: handle exception
