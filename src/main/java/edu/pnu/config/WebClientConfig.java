@@ -14,7 +14,7 @@ public class WebClientConfig {
 	public WebClient fastApiWebClient() {
 //		return WebClient.builder().baseUrl("http://localhost:8000").exchangeStrategies(strategies).build();
 //		return WebClient.builder().baseUrl("http://192.168.219.104:8000").exchangeStrategies(strategies).build();
-		return WebClient.builder().baseUrl("http://10.125.121.186:8000").exchangeStrategies(strategies).build();
+		return WebClient.builder().baseUrl("http://192.168.219.46:8000").exchangeStrategies(strategies).build();
 //		return WebClient.builder().baseUrl("http://25.1.68.182:8000").exchangeStrategies(strategies).build();
 	}
 }
